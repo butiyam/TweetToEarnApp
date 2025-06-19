@@ -14,7 +14,6 @@ export default function TweetForm({ onSuccess }: { onSuccess: () => void }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const validateTweet = () => {
      if (
        tweetUrl.includes("@ProjectX") &&
