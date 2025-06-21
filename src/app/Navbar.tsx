@@ -1,0 +1,51 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import "./Navbar.css"; // 👈 Import custom CSS
+
+export default function Navbar() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <>
+       {/* Mobile Toggle */}
+        <div className="md:hidden fixed top-4 left-4 z-50">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="text-white bg-gray-900 p-2 rounded"
+          >
+            {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
+
+        {/* Sidebar */}
+        <aside
+          className={`fixed md:static z-40 top-0 left-0 h-full w-64 bg-[#111] p-6 space-y-6 transform transition-transform duration-300 ease-in-out
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
+        >
+          <h1 className="text-2xl font-bold text-yellow-500">⚡ Dyfusion</h1>
+          <nav className="space-y-3">
+            <SidebarLink href="/">Dashboard</SidebarLink>
+            <SidebarLink href="/mining">Mining</SidebarLink>
+            <SidebarLink href="/leaderboard">Leaderboard</SidebarLink>
+            <SidebarLink href="/FAQ">FAQ</SidebarLink>
+            <SidebarLink href="https://x.com/dyfusionchain">X</SidebarLink>
+            <SidebarLink href="https://t.me/dyfusionchain">Telegram</SidebarLink>
+          </nav>
+        </aside>
+</>
+     );
+}
+
+function SidebarLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="block text-white hover:text-yellow-400 transition-colors"
+    >
+      {children}
+    </Link>
+  );
+}

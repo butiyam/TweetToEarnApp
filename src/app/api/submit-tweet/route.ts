@@ -3,7 +3,7 @@ import  { db }  from "../../lib/db";
 
 export async function POST(req: NextRequest) {
   try {
-    const { tweetId, username, text, hashtags } = await req.json();
+    const { tweetId, username, text, hashtags, wallet_address } = await req.json();
 
     if (!tweetId || !username || !text || !Array.isArray(hashtags)) {
       return NextResponse.json({ error: "Missing input" }, { status: 400 });
@@ -21,10 +21,10 @@ export async function POST(req: NextRequest) {
     );
 
     await db.query(
-      `INSERT INTO users (username, points)
-       VALUES (?, 10)
+      `INSERT INTO users (username, wallet_address, points)
+       VALUES (?, ?, 10)
        ON DUPLICATE KEY UPDATE points = points + 10`,
-      [username]
+      [username, wallet_address]
     );
 
     return NextResponse.json({ success: true });
