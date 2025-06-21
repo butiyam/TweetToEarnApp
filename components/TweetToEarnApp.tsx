@@ -48,6 +48,7 @@ export default function TweetToEarnApp() {
   const [tweetToEarnUnlocked, setTweetToEarnUnlocked] = useState(false);
 
   // Simulate referral success
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const successfulReferral = () => {
     setReferrals((prev) => prev + 1);
   };
@@ -186,7 +187,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
     }, 60000);
     return () => clearInterval(interval);
 
-  }, [isConnected, startTime]);
+  });
 
 
   return (
