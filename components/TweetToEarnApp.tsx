@@ -80,7 +80,7 @@ export default function TweetToEarnApp() {
   const fetchUserStats = async() => {
 
     try {
-       const res = await fetch(`/api/userBuyWallet?wallet_address=${encodeURIComponent(address)}`);
+       const res = await fetch(`/api/userBuyWallet?wallet_address=${encodeURIComponent(address || '')}`);
        const data = await res.json();
 
       if (!res.ok || !data.points) throw new Error(data.error || "Failed to fetch user points");
@@ -257,7 +257,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           {selectedAmount && isInGodmode && (
             <div className="mt-4 text-green-400 text-lg">
               You purchased ${selectedAmount} worth of coins.<br />
-              🎉 &quot;Congratulations you&apos;re now in GODMODE — you&apos;ll receive reflections at launch."
+              🎉 &quot;Congratulations you&apos;re now in GODMODE — you&apos;ll receive reflections at launch.&quot;
             </div>
           )}
         </div>
@@ -454,7 +454,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
                 <p className="text-lg max-w-3xl text-gray-300">
                   <strong className="text-white text-xl block mb-4">
-                    Buy cool devices that run validator nodes, contribute to the community and receive a share of token allocation when you scan your device's QR code on our app.
+                    Buy cool devices that run validator nodes, contribute to the community and receive a share of token allocation when you scan your device&apos;s QR code on our app.
                   </strong>
                   The devices envisioned include routers, Dyfusion box validator systems and Smart Phones.
                   <br /><br />
