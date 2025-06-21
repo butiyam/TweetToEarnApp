@@ -1,22 +1,19 @@
 // app/loading.tsx
 'use client';
+import Image from 'next/image';
 
 export default function Loading() {
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-black text-white text-xl">
-      <div className="animate-pulse">
-         <video
-            autoPlay
-            loop
-            muted
-            controls
-            
-            className="w-full h-full object-fill rounded-[10px]"
-            >
-            <source src="/loading.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-            </video>
-      </div>
-    </div>
+          <div className="h-screen w-full flex items-center justify-center bg-black text-white text-xl">
+            <div className="animate-pulse">
+              <Image
+              src="/loading.gif"
+              alt="loader"
+              width={500}
+              height={500}
+              className="rounded-xl shadow-lg object-contain"
+            />
+            </div>
+          </div>
   );
 }

@@ -209,7 +209,8 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsList>
 
         <TabsContent value="alphaminers">
-    <div className="min-h-screen bg-black text-white p-8">
+          <Image src="/alpha.png" width={2080} height={600}  alt="alpha-banner" />
+         <div className="min-h-screen bg-black text-white p-8">
           <h1 className="text-3xl font-bold mb-4">🚀 Alpha Miners</h1>
           {!isInGodmode && (
             <>
@@ -260,37 +261,11 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
               🎉 &quot;Congratulations you&apos;re now in GODMODE — you&apos;ll receive reflections at launch.&quot;
             </div>
           )}
-        </div>
-        
-        </TabsContent>
-
-        <TabsContent value="betaminers2">
-          <Card>
-            <CardContent className="p-4 space-y-4">
-              <Input
-                placeholder="Paste your tweet URL here..."
-                value={tweetUrl}
-                onChange={(e) => setTweetUrl(e.target.value)}
-              />
-              {isConnected ?
-              <Button 
-               onClick={ validateTweet }>
-                ✅ Validate Tweet
-              </Button>
-               :
-              <Button 
-               onClick={() =>
-                open(isConnected ? { view: "Account" } : undefined)
-              }>
-                Connect Wallet
-              </Button>
-               }
-              <div>{status}</div>
-            </CardContent>
-          </Card>
+        </div>    
         </TabsContent>
 
         <TabsContent value="betaminers">
+            <Image src="/beta.png" width={2080} height={600}  alt="beta-banner" />
             <div className="min-h-screen bg-[#0b0c10] text-white p-8">
             <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
 
@@ -367,7 +342,33 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     <h2 className="text-2xl font-semibold mb-4">💰 Tweet to Earn</h2>
                     <p className="text-gray-300 mb-2">One tweet = 200 coins</p>
                     <p className="text-green-400 text-sm">Twitter username is auto-synced ✅</p>
+
+                     <Card>
+                      <CardContent className="p-4 space-y-4">
+                        <Input
+                          placeholder="Paste your tweet URL here..."
+                          value={tweetUrl}
+                          onChange={(e) => setTweetUrl(e.target.value)}
+                        />
+                        {isConnected ?
+                        <Button 
+                        onClick={ validateTweet }>
+                          ✅ Validate Tweet
+                        </Button>
+                        :
+                        <Button 
+                        onClick={() =>
+                          open(isConnected ? { view: "Account" } : undefined)
+                        }>
+                          Connect Wallet
+                        </Button>
+                        }
+                        <div>{status}</div>
+                      </CardContent>
+                    </Card>
                   </div>
+
+                  
                 )}
               </div>
             )}
@@ -389,6 +390,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
 
         <TabsContent value="gammaminers">
+          <Image src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
           <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center justify-center text-center">
               <h1 className="text-4xl font-bold text-yellow-500 mb-8">🚧 COMING SOON</h1>
 
@@ -412,6 +414,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             </div>
         </TabsContent>
         <TabsContent value="deltaminers">
+          <Image src="/delta.png" width={2080} height={600}  alt="delta-banner" />
           <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center text-center">
                 <h1 className="text-4xl font-bold text-yellow-500 mb-8">🚧 COMING SOON</h1>
 

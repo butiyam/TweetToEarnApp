@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import "./Navbar.css"; // 👈 Import custom CSS
 
 export default function Navbar() {
@@ -11,7 +12,9 @@ export default function Navbar() {
   return (
     <>
        {/* Mobile Toggle */}
-        <div className="md:hidden fixed top-4 left-4 z-50">
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[#111] flex items-center justify-between px-4 py-3 border-b border-gray-700">
+                  <Image src="/logo.png" width={200} height={200} alt="logo" />
+        {/* Logo */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="text-white bg-gray-900 p-2 rounded"
@@ -25,7 +28,7 @@ export default function Navbar() {
           className={`fixed md:static z-40 top-0 left-0 h-full w-64 bg-[#111] p-6 space-y-6 transform transition-transform duration-300 ease-in-out
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
         >
-          <h1 className="text-2xl font-bold text-yellow-500">⚡ Dyfusion</h1>
+          <Image src="/logo.png" width={200} height={200} alt="logo" />
           <nav className="space-y-3">
             <SidebarLink href="/">Dashboard</SidebarLink>
             <SidebarLink href="/mining">Mining</SidebarLink>
