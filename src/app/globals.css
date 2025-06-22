@@ -14,7 +14,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+
+    --color-blue-400 : #06b2fc;
+    --background: #111;
     --foreground: #ededed;
   }
 }
@@ -23,4 +25,24 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+.text-yellow-500 {
+  color: #06b2fc;
+}
+
+.bg-lightning {
+
+    background-image: url(../../public/bg_lighting.svg);
+    background-position: center top 25%;
+    /* background-position: center; */
+    background-size: auto;
+    background-repeat: no-repeat;
+}
+
+.custom-grid {
+      display: grid;
+    align-content: center;
+    justify-items: stretch;
+    align-items: stretch;
+    justify-content: space-between;
 }

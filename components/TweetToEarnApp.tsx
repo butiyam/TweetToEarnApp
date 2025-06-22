@@ -39,7 +39,9 @@ export default function TweetToEarnApp() {
   };
 
    // for beta miners tab
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasJoined, setHasJoined] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [email, setEmail] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState("3d 0h 0m");
@@ -53,6 +55,7 @@ export default function TweetToEarnApp() {
     setReferrals((prev) => prev + 1);
   };
 
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
@@ -191,10 +194,15 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-black text-white p-6 bg-lightning" >
       <div className="flex justify-between items-center mb-6">
         <div>👤 {user}</div>
-        <div>Coins: {points}</div>
+        <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
+          Coins:
+          <span className="text-yellow-500">{points}</span>
+          <Image src="/coin.png" width={40} height={40}  alt="coin"  />
+        </div>
+
         <Button onClick={() =>
                 open(isConnected ? { view: "Account" } : undefined)
               }> { isConnected ? '🌐 Connected' :'🌐 Connect Wallet'}</Button>
@@ -219,7 +227,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
               </p>
               <button
                 onClick={handleBuyClick}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded text-lg"
+                className="bg-blue-400 hover:bg-blue-600 text-white px-6 py-2 rounded-xl text-lg"
               >
                 Buy now
               </button>
@@ -229,7 +237,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           {showPaymentStep && (
             <div className="mt-8 bg-gray-800 p-6 rounded">
               <h2 className="text-2xl font-semibold mb-4">Choose your package:</h2>
-              <div className="grid gap-4">
+              <div className="custom-grid gap-4">
                 {priceList.map((item) => (
                   <button
                     key={item.usd}
@@ -276,23 +284,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
               Complete welcome quest to unlock Tweet to Earn
             </p>
 
-            {!hasJoined ? (
-              <form onSubmit={handleJoin} className="space-y-4 max-w-md">
-                <input
-                  type="email"
-                  required
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 rounded bg-gray-800 text-white placeholder-gray-500"
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-lg"
-                >
-                  Join Beta
-                </button>
-              </form>
+            {!isConnected ? (
+                <Button 
+                onClick={() =>
+                  open(isConnected ? { view: "Account" } : undefined)
+                }>
+                  Connect Wallet
+                </Button>
             ) : (
               <div className="space-y-6">
                 {!questComplete ? (
@@ -311,7 +309,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     </ul>
                     <button
                       onClick={completeQuest}
-                      className="mt-4 bg-green-600 hover:bg-green-700 px-6 py-2 rounded"
+                      className="mt-4 bg-blue-400 hover:bg-blue-600 px-6 py-2 rounded-xl"
                     >
                       Mark Quest as Complete
                     </button>
@@ -397,7 +395,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
               {/* Placeholder 3D NFT pass image */}
               <div className="w-full max-w-md mb-6">
                 <Image
-                  src="/nft-pass-3d.png" // Replace with actual 3D render or animation if available
+                  src="/nftpass.png" // Replace with actual 3D render or animation if available
                   alt="OG NFT Pass"
                   width={500}
                   height={500}

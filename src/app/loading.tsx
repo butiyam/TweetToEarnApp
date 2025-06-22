@@ -11,7 +11,7 @@ export default function Loading() {
               alt="loader"
               width={500}
               height={500}
-              className="rounded-xl shadow-lg object-contain"
+              className="object-contain"
             />
             </div>
           </div>

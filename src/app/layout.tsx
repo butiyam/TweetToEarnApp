@@ -18,7 +18,7 @@ export default function RootLayout({
        <body className="flex min-h-screen bg-[#0b0c10] text-white">
         <Navbar/>
         <Web3Provider>
-           <main className="flex-1 mt-12 md:mt-0">{children}</main>
+           <main className="flex-1 mt-15 md:mt-0">{children}</main>
            
         </Web3Provider>
       </body>
