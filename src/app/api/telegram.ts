@@ -10,14 +10,14 @@ bot.start(async (ctx) => {
   const username = ctx.from.username || '';
   const firstName = ctx.from.first_name || 'there';
 
-  const appUrl = 'https://your-vercel-app.vercel.app'; // change this
+  const appUrl = 'https://tweet-to-earn-app.vercel.app'; // change this
 
   // Optional: Call your own API to store this user
   try {
     await fetch(`${appUrl}/api/save-user`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userId, username, first_name: firstName }),
+      body: JSON.stringify({ user_id: userId, username }),
     });
   } catch (err) {
     console.error('Failed to save user:', err);

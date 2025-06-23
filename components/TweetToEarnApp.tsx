@@ -299,7 +299,9 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     <ul className="space-y-2">
                       <li>✅ Follow us on X (+100K coins)</li>
                       <li>✅ Like, Comment & Share pinned post (+50K coins)</li>
-                      <li>✅ Join our Telegram Channel (+100K coins)</li>
+                      <li>✅ Join our Telegram Channel (+100K coins)<br />
+                      <a href='https://t.me/dyfusionchain_bot' target='_blank' >Click here to join</a>
+                      </li>
                       <li>
                         🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
                         <span className="text-sm text-gray-400">Time left: {timeLeft}</span>
