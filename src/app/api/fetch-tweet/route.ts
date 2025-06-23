@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const match = url.match(/^https?:\/\/(?:www\.)?x\.com\/([a-zA-Z0-9_]+)\/status\/(\d+)/);
     const tweetId = match?.[2];
      const username = match?.[1];
-     console.log(username)
+    // console.log(username)
     if (!tweetId) {
       return NextResponse.json({ error: "Invalid tweet URL" }, { status: 400 });
     }
