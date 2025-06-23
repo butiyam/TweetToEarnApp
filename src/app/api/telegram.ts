@@ -17,7 +17,7 @@ bot.start(async (ctx) => {
     await fetch(`${appUrl}/api/save-user`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: userId, username }),
+      body: JSON.stringify({ user_id: userId, username : username }),
     });
   } catch (err) {
     console.error('Failed to save user:', err);

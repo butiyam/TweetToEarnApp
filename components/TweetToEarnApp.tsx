@@ -218,8 +218,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
         <TabsContent value="alphaminers">
           <Image src="/alpha.png" width={2080} height={600}  alt="alpha-banner" />
-         <div className="min-h-screen bg-black text-white p-8">
-          <h1 className="text-3xl font-bold mb-4">🚀 Alpha Miners</h1>
+         <div className="min-h-screen bg-[#00000000] text-white p-8">
+            <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
+              <Image src="/rocket.png" width={50} height={50}  alt="rocket"  />
+              <h1 className="text-3xl font-bold mb-4">   
+                Alpha Miners
+                </h1>
+            </div>             
           {!isInGodmode && (
             <>
               <p className="text-lg text-gray-300 mb-6">
@@ -274,7 +279,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
         <TabsContent value="betaminers">
             <Image src="/beta.png" width={2080} height={600}  alt="beta-banner" />
-            <div className="min-h-screen bg-[#0b0c10] text-white p-8">
+            <div className="min-h-screen bg-[#00000000] text-white p-8">
             <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
 
             <p className="text-xl font-bold mb-2">
@@ -391,8 +396,8 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
         <TabsContent value="gammaminers">
           <Image src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
-          <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center justify-center text-center">
-              <h1 className="text-4xl font-bold text-yellow-500 mb-8">🚧 COMING SOON</h1>
+          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center">
+              <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
               {/* Placeholder 3D NFT pass image */}
               <div className="w-full max-w-md mb-6">
@@ -415,8 +420,8 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
         <TabsContent value="deltaminers">
           <Image src="/delta.png" width={2080} height={600}  alt="delta-banner" />
-          <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center text-center">
-                <h1 className="text-4xl font-bold text-yellow-500 mb-8">🚧 COMING SOON</h1>
+          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center">
+                <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
                 {/* Placeholder images section */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">

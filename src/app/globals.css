@@ -27,18 +27,20 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 .text-yellow-500 {
-  color: #06b2fc;
+  color: #01f3ff;
 }
 
 .bg-lightning {
 
     background-image: url(../../public/bg_lighting.svg);
-    background-position: center top 25%;
     /* background-position: center; */
     background-size: auto;
     background-repeat: no-repeat;
 }
 
+.rounded-2xl {
+  border: 3px solid #3ECCFD;
+}
 .custom-grid {
       display: grid;
     align-content: center;

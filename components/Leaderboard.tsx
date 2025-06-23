@@ -85,7 +85,10 @@ export default  function Leaderboard() {
 
                   ))
                 ) : (
-                  <div>Error loading leaderboard</div>
+                  <tr  className="odd:bg-gray-800 even:bg-gray-900 hover:bg-gray-700 transition-colors duration-200">
+                    <td colSpan={3} className="px-6 py-4 border-b border-gray-700">Error loading leaderboard</td>
+                  </tr>
+
                 )}
 
              

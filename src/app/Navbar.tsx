@@ -31,11 +31,10 @@ export default function Navbar() {
           <Image src="/logo.png" width={200} height={200} alt="logo" />
           <nav className="space-y-3">
             <SidebarLink href="/">Dashboard</SidebarLink>
-            <SidebarLink href="/mining">Mining</SidebarLink>
             <SidebarLink href="/leaderboard">Leaderboard</SidebarLink>
-            <SidebarLink href="/FAQ">FAQ</SidebarLink>
+            <SidebarLink href="/website">Website</SidebarLink>
+            <SidebarLink href="https://t.me/dyfusionchain">Community</SidebarLink>
             <SidebarLink href="https://x.com/dyfusionchain">X</SidebarLink>
-            <SidebarLink href="https://t.me/dyfusionchain">Telegram</SidebarLink>
           </nav>
         </aside>
 </>
