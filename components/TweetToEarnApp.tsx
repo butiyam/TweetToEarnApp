@@ -345,16 +345,15 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                         </ul>
                       </CardContent>
                     </Card>
-                    
-                    <p className="text-gray-300 mb-2">One tweet = 200 coins</p>
+                    <br/>
                      <li>
                         🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
                         <span className="text-sm text-gray-400">Time left: {timeLeft}</span>
                         <br />
                         Successful referrals: {referrals} / 7
                       </li>
-                    <p className="text-green-400 text-sm">Twitter username is auto-synced ✅</p>
-
+                    <p className="hidden text-green-400 text-sm">Twitter username is auto-synced ✅</p>
+                    <br/>
                      <Card>
                       <CardContent className="p-4 space-y-4">
                         <Input
