@@ -4,22 +4,31 @@ import { useState, useEffect } from "react";
 import Card from "./ui/Card";
 import CardContent from "./ui/CardContent";
 import { Tabs, TabsContent } from "./ui/Tabs";
+import Loader from "./Loader";
 import Image from "next/image";
 
 export default function Leaderboard() {
+  
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<{ username: string; points: number }[]>([]);
 
+
   useEffect(() => {
+
+    
     const load = async () => {
       try {
+        setLoading(true);
         const res = await fetch("/api/leaderboard");
         const data = await res.json();
         setUsers(data);
+        setLoading(false);
       } catch (err) {
         console.error("Failed to load leaderboard", err);
       }
     };
     load();
+
   }, []);
 
   const getRankIcon = (i: number) => {
@@ -46,6 +55,9 @@ export default function Leaderboard() {
             height={300}
             className="w-full h-auto rounded-xl shadow-lg object-contain mb-6 sm:mb-10"
           />
+          {loading ?
+          <Loader/>
+          :
           <Card>
             <CardContent className="p-2 sm:p-4">
               <h2 className="text-lg sm:text-xl font-semibold mb-4">🏆 Leaderboard</h2>
@@ -88,6 +100,7 @@ export default function Leaderboard() {
               </div>
             </CardContent>
           </Card>
+          }
         </TabsContent>
       </Tabs>
     </div>

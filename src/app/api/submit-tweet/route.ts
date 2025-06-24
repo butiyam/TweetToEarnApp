@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       [username, wallet_address]
     );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: "Tweet validated successfully" });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("API Error:", err.message);
