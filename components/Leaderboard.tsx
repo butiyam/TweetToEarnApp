@@ -5,7 +5,6 @@ import Card from "./ui/Card";
 import CardContent from "./ui/CardContent";
 import { Tabs, TabsContent } from "./ui/Tabs";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 export default function Leaderboard() {
   const [users, setUsers] = useState<{ username: string; points: number }[]>([]);

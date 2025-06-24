@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import {Web3Provider} from '../app/hooks/WebProvider'
-import Navbar from "./Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
