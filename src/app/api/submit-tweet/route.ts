@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     await db.query(
       `INSERT INTO users (username, wallet_address, points)
        VALUES (?, ?, 10)
-       ON DUPLICATE KEY UPDATE points = points + 10`,
+       ON DUPLICATE KEY UPDATE points = points + 200`,
       [username, wallet_address]
     );
 

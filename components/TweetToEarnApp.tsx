@@ -108,8 +108,8 @@ export default function TweetToEarnApp() {
       const tweetText = await fetchTweetContent(tweetUrl);
       console.log(tweetText.hashtags);
       //setUsername(tweetText.username)
-      const hasMention = tweetText.text.includes("@ProjectX");
-      const hasAllHashtags = ["ProjectX", "Web3Earnings", "TweetToEarn"].every(tag => tweetText.hashtags.includes(tag));
+      const hasMention = tweetText.text.includes("@dyfusionchain");
+      const hasAllHashtags = ["DyfusionLaunch", "Web3RevolutionNow", "TweetToEarn"].every(tag => tweetText.hashtags.includes(tag));
 
       if (hasMention && hasAllHashtags) {
        // call on success;
@@ -333,6 +333,19 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                 {tweetToEarnUnlocked && (
                   <div className="bg-black border border-yellow-500 mt-8 p-6 rounded">
                     <h2 className="text-2xl font-semibold mb-4">💰 Tweet to Earn</h2>
+
+                     <Card>
+                      <CardContent className="p-4 space-y-2">
+                        <h2 className="text-xl font-semibold">📜 Tweet Guidelines</h2>
+                        <ul className="list-disc list-inside">
+                          <li>Mention <strong>@dyfusionchain</strong></li>
+                          <li>Include hashtags: <code>#DyfusionLaunch</code>, <code>#Tweet2Earn</code>, <code>#Web3RevolutionNow</code></li>
+                          <li>Do not copy others&apos; tweets</li>
+                          <li>1 Tweet = 200 Coins</li>
+                        </ul>
+                      </CardContent>
+                    </Card>
+                    
                     <p className="text-gray-300 mb-2">One tweet = 200 coins</p>
                      <li>
                         🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
