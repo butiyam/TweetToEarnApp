@@ -1,13 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from 'next/navigation';
 import "./Navbar.css"; // 👈 Import custom CSS
 
 export default function Navbar() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const pathname = usePathname();
+
+
+      // 🔁 Auto-close menu on route change
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   return (
     <>

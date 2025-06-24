@@ -25,15 +25,22 @@ export default  function Leaderboard() {
 
   return (
    <> 
-    <div className="min-h-screen bg-black text-white p-6 mt-20 bg-lightning">
+    <div className="min-h-screen bg-black text-white p-6 bg-lightning">
       <div className="flex justify-between items-center mb-6">
         &nbsp;
       </div>
 
       <Tabs defaultValue="leaderboard">
         <TabsContent value="leaderboard">
+            <Image
+                  src="/leaderboard.png" 
+                  alt="leaderboard-banner"
+                  width={2080} 
+                  height={600} 
+                  className="rounded-xl shadow-lg object-contain mb-10"
+                />
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-2">
               <h2 className="text-xl font-semibold mb-2">🏆 Leaderboard</h2>
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-gray-900 text-white border border-gray-700 rounded-lg shadow-lg">
