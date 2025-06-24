@@ -246,7 +246,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           )}
 
           {showPaymentStep && (
-            <div className="mt-8 bg-gray-800 p-6 rounded-2xl">
+            <div className="mt-8 bg-gray-800 p-6 rounded-2xl" style={{maxWidth: 'max-content'}}>
               <h2 className="text-2xl font-semibold mb-4">Choose your package:</h2>
               <div className="custom-grid gap-4">
                 {priceList.map((item) => (
@@ -266,16 +266,16 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           )}
 
           {isInGodmode && (
-            <div className="mt-10 bg-yellow-700 p-6 rounded shadow">
+            <div className="mt-10 p-6 rounded-2xl shadow">
               <h2 className="text-xl font-bold mb-2">🎉 Congratulations!</h2>
-              <p className="text-lg">
+              <p className="text-lg ">
                 You&apos;re in GODMODE and your Alpha mining allocation qualifies to receive reflections at launch.
               </p>
             </div>
           )}
 
           {selectedAmount && isInGodmode && (
-            <div className="mt-4 text-green-400 text-lg">
+            <div className="mt-4 text-yellow-500 text-lg">
               You purchased ${selectedAmount} worth of coins.<br />
               🎉 &quot;Congratulations you&apos;re now in GODMODE — you&apos;ll receive reflections at launch.&quot;
             </div>
@@ -313,11 +313,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                       <li>✅ Join our Telegram Channel (+100K coins)</li>
                      
                     </ul>
+
                     <button
                       onClick={completeQuest}
                       className="mt-4 bg-blue-400 hover:bg-blue-600 px-6 py-2 rounded-xl"
                     >
-                      Mark Quest as Complete
+                      <Image className='rounded-4xl' src="/loading.gif" height={80} width={80} alt="loader" />
+                      
                     </button>
                     
                   </div>
