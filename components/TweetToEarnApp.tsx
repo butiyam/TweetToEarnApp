@@ -68,6 +68,12 @@ export default function TweetToEarnApp() {
   const completeQuest = () => {
     setQuestComplete(true);
     setTweetToEarnUnlocked(true);
+  
+        setTimeout(() => {
+      setHasJoined(true);
+      setStartTime(Date.now());
+    }, 1000);
+
   };
 
   // usestate for wallet connect and connected
@@ -217,7 +223,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsList>
 
         <TabsContent value="alphaminers">
-          <Image src="/alpha.png" width={2080} height={600}  alt="alpha-banner" />
+          <Image className='rounded-xl' src="/alpha.png" width={2080} height={600}  alt="alpha-banner" />
          <div className="min-h-screen bg-[#00000000] text-white p-8">
             <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
               <Image src="/rocket.png" width={50} height={50}  alt="rocket"  />
@@ -240,7 +246,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           )}
 
           {showPaymentStep && (
-            <div className="mt-8 bg-gray-800 p-6 rounded">
+            <div className="mt-8 bg-gray-800 p-6 rounded-2xl">
               <h2 className="text-2xl font-semibold mb-4">Choose your package:</h2>
               <div className="custom-grid gap-4">
                 {priceList.map((item) => (
@@ -278,7 +284,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
 
         <TabsContent value="betaminers">
-            <Image src="/beta.png" width={2080} height={600}  alt="beta-banner" />
+            <Image className='rounded-xl' src="/beta.png" width={2080} height={600}  alt="beta-banner" />
             <div className="min-h-screen bg-[#00000000] text-white p-8">
             <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
 
@@ -299,20 +305,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             ) : (
               <div className="space-y-6">
                 {!questComplete ? (
-                  <div className="bg-gray-800 p-6 rounded">
+                  <div className="bg-gray-800 p-6 rounded-2xl">
                     <h2 className="text-xl font-bold mb-4">🎯 Welcome Quest</h2>
                     <ul className="space-y-2">
                       <li>✅ Follow us on X (+100K coins)</li>
                       <li>✅ Like, Comment & Share pinned post (+50K coins)</li>
-                      <li>✅ Join our Telegram Channel (+100K coins)<br />
-                      <a href='https://t.me/dyfusionchain_bot' target='_blank' >Click here to join</a>
-                      </li>
-                      <li>
-                        🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
-                        <span className="text-sm text-gray-400">Time left: {timeLeft}</span>
-                        <br />
-                        Successful referrals: {referrals} / 7
-                      </li>
+                      <li>✅ Join our Telegram Channel (+100K coins)</li>
+                     
                     </ul>
                     <button
                       onClick={completeQuest}
@@ -320,18 +319,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     >
                       Mark Quest as Complete
                     </button>
-                    <div className="mt-4">
-                      <p className="text-sm">Your referral link:</p>
-                      <div className="bg-gray-700 p-2 rounded mt-1 text-sm break-all">
-                        https://dyfusion.app/ref/your-user-id
-                      </div>
-                      <button
-                        className="mt-2 text-blue-400 underline text-sm"
-                        onClick={() => navigator.clipboard.writeText('https://dyfusion.app/ref/your-user-id')}
-                      >
-                        Copy Referral Link
-                      </button>
-                    </div>
+                    
                   </div>
                 ) : (
                   <div className="bg-green-700 p-6 rounded shadow">
@@ -346,6 +334,12 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                   <div className="bg-black border border-yellow-500 mt-8 p-6 rounded">
                     <h2 className="text-2xl font-semibold mb-4">💰 Tweet to Earn</h2>
                     <p className="text-gray-300 mb-2">One tweet = 200 coins</p>
+                     <li>
+                        🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
+                        <span className="text-sm text-gray-400">Time left: {timeLeft}</span>
+                        <br />
+                        Successful referrals: {referrals} / 7
+                      </li>
                     <p className="text-green-400 text-sm">Twitter username is auto-synced ✅</p>
 
                      <Card>
@@ -368,7 +362,19 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Connect Wallet
                         </Button>
                         }
-                        <div>{status}</div>
+                        <div className="text-red-400">{status}</div>
+                        <div className="mt-4">
+                          <p className="text-sm">Your referral link:</p>
+                          <div className="bg-gray-700 p-2 rounded mt-1 text-sm break-all">
+                            https://dyfusion.app/ref/your-user-id
+                          </div>
+                          <button
+                            className="mt-2 text-blue-400 underline text-sm"
+                            onClick={() => navigator.clipboard.writeText('https://dyfusion.app/ref/your-user-id')}
+                          >
+                            Copy Referral Link
+                          </button>
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
@@ -395,7 +401,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
 
         <TabsContent value="gammaminers">
-          <Image src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
+          <Image className='rounded-xl' src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
           <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center">
               <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
@@ -419,7 +425,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             </div>
         </TabsContent>
         <TabsContent value="deltaminers">
-          <Image src="/delta.png" width={2080} height={600}  alt="delta-banner" />
+          <Image className='rounded-xl' src="/delta.png" width={2080} height={600}  alt="delta-banner" />
           <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center">
                 <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 

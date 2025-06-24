@@ -13,10 +13,10 @@ if (!projectId) {
 }
 // 2. Create a metadata object - optional
 const metadata = {
-  name: 'Vorn AI Souce',
+  name: 'DyFusion',
   description: 'Trade Smarter. Invest Better. Automate Everything',
-  url: 'https://www.vorn.ai/en', // origin must match your domain & subdomain
-  icons: ["https://www.vorn.ai/assets/logo.svg"]
+  url: 'https://tweet-to-earn-app.vercel.app', // origin must match your domain & subdomain
+  icons: ["https://tweet-to-earn-app.vercel.app/logo.png"]
 }
 // 3. Set the networks
 const networks = [mainnet]

@@ -21,7 +21,9 @@ export default function Navbar() {
     <>
        {/* Mobile Toggle */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-[#111] flex items-center justify-between px-4 py-3 border-b border-gray-700">
+                <Link href="/dashboard">
                   <Image src="/logo.png" width={200} height={200} alt="logo" />
+                </Link>
         {/* Logo */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -36,9 +38,11 @@ export default function Navbar() {
           className={`fixed md:static z-40 top-0 left-0 h-full w-64 bg-[#111] p-6 space-y-6 transform transition-transform duration-300 ease-in-out
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
         >
-          <Image src="/logo.png" width={200} height={200} alt="logo" />
+          <Link href="/dashboard">
+           <Image src="/logo.png" width={200} height={200} alt="logo" />
+          </Link>
           <nav className="space-y-3">
-            <SidebarLink href="/">Dashboard</SidebarLink>
+            <SidebarLink href="/dashboard">Dashboard</SidebarLink>
             <SidebarLink href="/leaderboard">Leaderboard</SidebarLink>
             <SidebarLink href="/website">Website</SidebarLink>
             <SidebarLink href="https://t.me/dyfusionchain">Community</SidebarLink>
