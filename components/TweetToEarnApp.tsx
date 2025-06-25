@@ -231,7 +231,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
    
   return (
     
-    <div className="min-h-screen bg-black text-white p-6 bg-lightning" >
+    <div className="min-h-screen bg-black text-white p-4 sm:p-6 bg-lightning" >
       <div className="flex justify-between items-center mb-6">
         <div>👤 {user}</div>
         <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
@@ -334,7 +334,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         
         <TabsContent value="betaminers">
             <Image className='rounded-xl' src="/beta.png" width={2080} height={600}  alt="beta-banner" />
-            <div className="min-h-screen bg-[#00000000] text-white p-8">
+            <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col">
             <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
 
             <p className="text-xl font-bold mb-2">
@@ -352,7 +352,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                   Connect Wallet
                 </Button>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-6" style={{width: '-webkit-fill-available'}}>
                 {!questComplete ? (
                   <div className="bg-gray-800 p-6 rounded-2xl">
                     <h2 className="text-xl font-bold mb-4">🎯 Welcome Quest</h2>
@@ -405,8 +405,16 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                       <CardContent className="p-4 space-y-2">
                         <h2 className="text-xl font-semibold">📜 Tweet Guidelines</h2>
                         <ul className="list-disc list-inside">
-                          <li>Mention <strong>@dyfusionchain</strong></li>
-                          <li>Include hashtags: <code>#DyfusionLaunch</code>, <code>#TweetToEarn</code>, <code>#Web3RevolutionNow</code></li>
+                          <li>Mention : 
+                            <strong> @dyfusionchain</strong>
+                          <Image className='inline-flex ml-5' src="/copy.svg" width={30} height={30} alt = "copy" />
+                          </li>
+                          <li>Include hashtags: 
+                            <code> #DyfusionLaunch</code>, 
+                            <code> #TweetToEarn</code>, 
+                            <code> #Web3RevolutionNow</code>
+                            <code><Image className='inline-flex ml-5' src="/copy.svg" width={30} height={30} alt = "copy" /></code>
+                          </li>
                           <li>Do not copy others&apos; tweets</li>
                           <li>1 Tweet = 200 Coins</li>
                         </ul>
@@ -486,21 +494,6 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             )}
           </div>
         </TabsContent>
-
-        <TabsContent value="guidelines">
-          <Card>
-            <CardContent className="p-4 space-y-2">
-              <h2 className="text-xl font-semibold">📜 Tweet Guidelines</h2>
-              <ul className="list-disc list-inside">
-                <li>Mention <strong>@ProjectX</strong></li>
-                <li>Include hashtags: <code>#ProjectX</code>, <code>#Web3Earnings</code>, <code>#TweetToEarn</code></li>
-                <li>Do not copy others&apos; tweets</li>
-                <li>1 Tweet = 10 Coins</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
         <TabsContent value="gammaminers">
           <Image className='rounded-xl' src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
           <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center">
