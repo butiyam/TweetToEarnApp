@@ -15,6 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 
 export default function TweetToEarnApp() {
 
+   const [copy_url1, setURL1] = useState('/copy.svg');
+   const [copy_url2, setURL2] = useState('/copy.svg'); 
    const [loading, setLoading] = useState(false);
 
   // for alpha miners tab
@@ -58,6 +60,7 @@ export default function TweetToEarnApp() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [days, setDays] = useState(3);
   const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [hours, setHours] = useState(0);
   const [referrals, setReferrals] = useState(0);
   const [questComplete, setQuestComplete] = useState(false);
@@ -77,6 +80,22 @@ export default function TweetToEarnApp() {
       setHasJoined(true);
       setStartTime(Date.now());
     }, 1000);
+  };
+
+  const handleCopy = () => {
+   setURL1('/copied.svg');
+      navigator.clipboard.writeText('@dyfusionchain');
+     setTimeout(() => {
+   setURL1('/copy.svg');
+    }, 3000);
+  };
+
+  const handleCopy2 = () => {
+   setURL2('/copied.svg');
+      navigator.clipboard.writeText('#DyfusionLaunch, #TweetToEarn, #Web3RevolutionNow');
+   setTimeout(() => {
+   setURL2('/copy.svg');
+    }, 3000);
   };
 
   const completeQuest = () => {
@@ -216,12 +235,14 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / (1000)) % 60);
 
       setDays(days);
       setHours(hours);
       setMinutes(minutes);
+      setSeconds(seconds);
 
-    }, 60000);
+    }, 1000);
     
     return () => clearInterval(interval);
 
@@ -334,16 +355,20 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         
         <TabsContent value="betaminers">
             <Image className='rounded-xl' src="/beta.png" width={2080} height={600}  alt="beta-banner" />
-            <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col">
+            <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col mt-5">
             <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
-
+           {!questComplete ?
+           <>
             <p className="text-xl font-bold mb-2">
               Earn real tokens for tweeting about Dyfusion
             </p>
             <p className="text-lg mb-6 text-gray-300">
               Complete welcome quest to unlock Tweet to Earn
             </p>
-
+            </>
+            :
+            <></>
+            }
             {!isConnected ? (
                 <Button 
                 onClick={() =>
@@ -389,10 +414,10 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     
                   </div>
                 ) : (
-                  <div className="bg-green-700 p-6 rounded shadow">
+                  <div className="bg-blue-400 p-6 rounded shadow">
                     <h2 className="text-xl font-bold mb-2">✅ Quest Completed!</h2>
                     <p className="text-lg">
-                      You&apos;re now eligible for Tweet to Earn. You&apos;ve earned up to 1M coins.
+                      You&apos;re now eligible for Tweet to Earn.
                     </p>
                   </div>
                 )}
@@ -404,54 +429,25 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                      <Card>
                       <CardContent className="p-4 space-y-2">
                         <h2 className="text-xl font-semibold">📜 Tweet Guidelines</h2>
+                        <h2 className="text-yellow-500 font-bold">1 Tweet = 200 Coins</h2>
                         <ul className="list-disc list-inside">
-                          <li>Mention : 
+                          <li>Creat a tweet</li>
+                          <li>Mention 
                             <strong> @dyfusionchain</strong>
-                          <Image className='inline-flex ml-5' src="/copy.svg" width={30} height={30} alt = "copy" />
+                          <Image className='inline-flex ml-5' onClick={handleCopy} src={copy_url1} width={30} height={30} alt = "copy" />
                           </li>
-                          <li>Include hashtags: 
+                          <li>Include hashtags 
                             <code> #DyfusionLaunch</code>, 
                             <code> #TweetToEarn</code>, 
                             <code> #Web3RevolutionNow</code>
-                            <code><Image className='inline-flex ml-5' src="/copy.svg" width={30} height={30} alt = "copy" /></code>
+                            <code><Image className='inline-flex ml-5' onClick={handleCopy2} src={copy_url2} width={30} height={30} alt = "copy" /></code>
                           </li>
                           <li>Do not copy others&apos; tweets</li>
-                          <li>1 Tweet = 200 Coins</li>
+                          <li>Copy your tweet link and paste it here to validate </li>
+                          <li>Click Validate Tweet button to finish</li>
                         </ul>
-                      </CardContent>
-                    </Card>
-                    <br/>
-                     <li>
-                        🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
-                        <span className="text-sm text-gray-400">Time left: 
-                              <div className="flex justify-left items-center gap-6">
-                                 <div className="flex flex-col items-center">
-                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
-                                    {days}
-                                  </div>
-                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Days</div>
-                                </div>
-                                 <div className="flex flex-col items-center">
-                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
-                                    {hours}
-                                  </div>
-                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Hours</div>
-                                </div>
-                                 <div className="flex flex-col items-center">
-                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
-                                    {minutes}
-                                  </div>
-                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Minutes</div>
-                                </div>
-                              </div>
 
-                        </span>
-                        <br />
-                        Successful referrals: {referrals} / 7
-                      </li>
-                    <p className="hidden text-green-400 text-sm">Twitter username is auto-synced ✅</p>
-                    <br/>
-                     <Card>
+                      
                       <CardContent className="p-4 space-y-4">
                         <Input
                           placeholder="Paste your tweet URL here..."
@@ -485,7 +481,47 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           </button>
                         </div>
                       </CardContent>
+                     <br/>
+                     <li>
+                        🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
+                        <span className="text-sm text-gray-400">Time left: 
+                              <div className="flex justify-left items-center gap-6">
+                                 <div className="flex flex-col items-center">
+                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
+                                    {days}
+                                  </div>
+                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Days</div>
+                                </div>
+                                 <div className="flex flex-col items-center">
+                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
+                                    {hours}
+                                  </div>
+                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Hours</div>
+                                </div>
+                                 <div className="flex flex-col items-center">
+                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
+                                    {minutes}
+                                  </div>
+                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Minutes</div>
+                                </div>
+                                <div className="flex flex-col items-center">
+                                  <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
+                                    {seconds}
+                                  </div>
+                                  <div className="text-cyan-400 mt-2 text-sm md:text-sm">Seconds</div>
+                                </div>
+                              </div>
+
+                        </span>
+                        <br />
+                        Successful referrals: {referrals} / 7
+                      </li>
+                    <br/>
+
+                      </CardContent>
                     </Card>
+
+                    
                   </div>
 
                   
@@ -496,7 +532,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
         <TabsContent value="gammaminers">
           <Image className='rounded-xl' src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
-          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center">
+          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center mt-5">
               <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
               {/* Placeholder 3D NFT pass image */}
@@ -520,7 +556,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
         <TabsContent value="deltaminers">
           <Image className='rounded-xl' src="/delta.png" width={2080} height={600}  alt="delta-banner" />
-          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center">
+          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center mt-5">
                 <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
                 {/* Placeholder images section */}
