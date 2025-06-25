@@ -54,6 +54,10 @@ export default function TweetToEarnApp() {
    // for beta miners tab
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasJoined, setHasJoined] = useState(false);
+  const [hasJoinedX, setHasJoinedX] = useState(false);
+  const [hasJoinedTG, setHasJoinedTG] = useState(false);
+  const [hasShared, setHasShared] = useState(false);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [email, setEmail] = useState("");
   const [startTime, setStartTime] = useState<number | null>(null);
@@ -98,6 +102,21 @@ export default function TweetToEarnApp() {
   };
 
   const completeQuest = () => {
+  if(!hasJoinedX){
+    setStatus("Follow us on X first");
+    return;
+  }
+
+  if(!hasShared){
+    setStatus("Like, Comment & Share pinned post first");
+    return;
+  }
+
+  if(!hasJoinedTG){
+    setStatus("Join our Telegram Channel first");
+    return;
+  }
+
     switchTab();
     setQuestComplete(true);
     setTweetToEarnUnlocked(true);
@@ -136,6 +155,45 @@ export default function TweetToEarnApp() {
 
   }
 
+  const validateClick =  async(media: number,coins: number) => {
+    try {
+      if(media === 1){
+        setHasJoinedX(true);
+        setPoints(points+coins);
+        console.log(coins);
+
+      const tweetRes = await fetch("/api/credit-coins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          wallet_address: address,
+        }),
+      });
+
+      const resData = await tweetRes.json()
+
+      if(resData.error) {
+       setStatus(resData.error) 
+      }
+
+      if(resData.message) {
+       setStatus(resData.message) 
+      }
+
+      }
+      else if(media === 2){
+        setHasShared(true);
+        setPoints(points+coins);
+      }else{
+         setHasJoinedTG(true);
+         setPoints(points+coins);
+      }
+
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const validateTweet =  async() => {
     try {
       const tweetText = await fetchTweetContent(tweetUrl);
@@ -172,7 +230,7 @@ export default function TweetToEarnApp() {
       const res = await fetch(`/api/user?username=${encodeURIComponent(tweetText.username)}`);
       const data = await res.json();
 
-      if (!res.ok || !data.points) throw new Error(data.error || "Failed to fetch user points");
+      if (!res.ok || !data.points) throw new Error(data.error || "Failed to fetch user coins");
       setPoints(data.points);
 
 
@@ -384,23 +442,21 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     <h2 className="text-xl font-bold mb-4">🎯 Welcome Quest</h2>
                     <ul className="space-y-2">
                       <li>✅ Follow us on X  
-                        <button
-                          onClick={completeQuest}
+                        <button onClick={ ()=> validateClick (1,100000)}
                            className="bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl" >
-                          Start
+                        <a href="https://x.com/dyfusionchain?t=I5hv2La_ltJpZ-q3S26UZA&s=09" target='_blank'>  Start</a>
                         </button>
                      +100K coins</li>
                       <li>✅ Like, Comment & Share pinned post 
-                        <button
-                          onClick={completeQuest}
+                        <button onClick={ ()=> validateClick (2,50000)}
                            className="bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl" >
-                          Start
+                          <a href="https://x.com/dyfusionchain/status/1936494464832340310" target='_blank'>  Start</a>
                         </button>
                         +50K coins</li>
-                      <li>✅ Join our Telegram Channel <button
-                          onClick={completeQuest}
+                      <li>✅ Join our Telegram Channel 
+                        <button onClick={ ()=> validateClick (3,100000)}
                            className="bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl" >
-                          Start
+                          <a href="https://t.me/dyfusionchain" target='_blank' > Start</a>
                         </button>
                         +100K coins</li>
                      
@@ -412,6 +468,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     >
                       Mark Quest as Complete
                     </button>
+                    <div className="text-red-400 mt-5">{status}</div><br/>
                     
                   </div>
                 ) : (

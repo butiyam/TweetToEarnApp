@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #111;
   --foreground: #171717;
 }
 
@@ -44,7 +44,6 @@ body {
 .bg-lightning {
 
     background-image: url(../../public/bg_lighting.svg);
-    /* background-position: center; */
     background-size: auto;
     background-repeat: no-repeat;
 }
