@@ -280,7 +280,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
        <>
         <TabsContent value="alphaminers">
           <Image className='rounded-xl' src="/alpha.png" width={2080} height={600}  alt="alpha-banner" />
-         <div className="min-h-screen bg-[#00000000] text-white p-8">
+         <div className="min-h-screen bg-[#00000000] text-white">
             <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
               <Image src="/rocket.png" width={50} height={50}  alt="rocket"  />
               <h1 className="text-3xl font-bold mb-4">   
@@ -353,9 +353,9 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
         
         <TabsContent value="betaminers">
-            <Image className='rounded-xl' src="/beta.png" width={2080} height={600}  alt="beta-banner" />
-            <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col">
-            <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
+            <Image className='rounded-xl mb-5' src="/beta.png" width={2080} height={600}  alt="beta-banner" />
+            <div className="min-h-screen bg-[#00000000] text-white flex flex-col">
+            <h1 className="text-3xl font-bold mb-5">🧪 Beta Miners</h1>
 
             {!questComplete ?
                 <>
@@ -415,7 +415,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     
                   </div>
                 ) : (
-                  <div className="bg-blue-400 p-6 rounded shadow">
+                  <div className="bg-blue-400 p-6 rounded-2xl shadow">
                     <h2 className="text-xl font-bold mb-2">✅ Quest Completed!</h2>
                     <p className="text-sm">
                       You&apos;re now eligible for Tweet to Earn.
@@ -531,8 +531,8 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           </div>
         </TabsContent>
         <TabsContent value="gammaminers">
-          <Image className='rounded-xl' src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
-          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center">
+          <Image className='rounded-xl mb-5' src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
+          <div className="min-h-screen bg-[#00000000] text-white flex flex-col items-center justify-center text-center">
               <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
               {/* Placeholder 3D NFT pass image */}
@@ -555,8 +555,8 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             </div>
         </TabsContent>
         <TabsContent value="deltaminers">
-          <Image className='rounded-xl' src="/delta.png" width={2080} height={600}  alt="delta-banner" />
-          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center">
+          <Image className='rounded-xl mb-5' src="/delta.png" width={2080} height={600}  alt="delta-banner" />
+          <div className="min-h-screen bg-[#00000000] text-white flex flex-col items-center text-center">
                 <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
                 {/* Placeholder images section */}
