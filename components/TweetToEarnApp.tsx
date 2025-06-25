@@ -1,7 +1,6 @@
 "use client";
 import Image from 'next/image';
 import { useState, useEffect } from "react";
-import  Card from "./ui/Card";
 import  CardContent  from "./ui/CardContent";
 import  Button  from "./ui/Button";
 import  Input  from "./ui/Input";
@@ -60,8 +59,8 @@ export default function TweetToEarnApp() {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [days, setDays] = useState(3);
   const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
   const [hours, setHours] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [referrals, setReferrals] = useState(0);
   const [questComplete, setQuestComplete] = useState(false);
   const [tweetToEarnUnlocked, setTweetToEarnUnlocked] = useState(false);
@@ -355,20 +354,22 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         
         <TabsContent value="betaminers">
             <Image className='rounded-xl' src="/beta.png" width={2080} height={600}  alt="beta-banner" />
-            <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col mt-5">
+            <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col">
             <h1 className="text-3xl font-bold mb-4">🧪 Beta Miners</h1>
-           {!questComplete ?
-           <>
-            <p className="text-xl font-bold mb-2">
-              Earn real tokens for tweeting about Dyfusion
-            </p>
-            <p className="text-lg mb-6 text-gray-300">
-              Complete welcome quest to unlock Tweet to Earn
-            </p>
-            </>
-            :
-            <></>
+
+            {!questComplete ?
+                <>
+                  <p className="text-xl font-bold mb-2">
+                    Earn real tokens for tweeting about Dyfusion
+                  </p>
+                  <p className="text-lg mb-6 text-gray-300">
+                    Complete welcome quest to unlock Tweet to Earn
+                  </p>
+                </>
+                :
+                <></>
             }
+
             {!isConnected ? (
                 <Button 
                 onClick={() =>
@@ -416,38 +417,39 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                 ) : (
                   <div className="bg-blue-400 p-6 rounded shadow">
                     <h2 className="text-xl font-bold mb-2">✅ Quest Completed!</h2>
-                    <p className="text-lg">
+                    <p className="text-sm">
                       You&apos;re now eligible for Tweet to Earn.
                     </p>
                   </div>
                 )}
 
                 {tweetToEarnUnlocked && (
-                  <div className="bg-black border border-yellow-500 mt-8 p-6 rounded">
+                  <div className="bg-black rounded-2xl p-5">
                     <h2 className="text-2xl font-semibold mb-4">💰 Tweet to Earn</h2>
 
-                     <Card>
-                      <CardContent className="p-4 space-y-2">
-                        <h2 className="text-xl font-semibold">📜 Tweet Guidelines</h2>
-                        <h2 className="text-yellow-500 font-bold">1 Tweet = 200 Coins</h2>
+                     <div className="bg-[#00000000]">
+                      <CardContent className="p-2 space-y-2">
+                        <h2 className="text-lg font-bold text-yellow-500">1 Tweet = 200 Coins</h2>
+                        <h2 className="text-lg font-semibold">📜 Tweet Guidelines</h2>
                         <ul className="list-disc list-inside">
-                          <li>Creat a tweet</li>
-                          <li>Mention 
+                          <li className="text-sm">Mention : 
                             <strong> @dyfusionchain</strong>
                           <Image className='inline-flex ml-5' onClick={handleCopy} src={copy_url1} width={30} height={30} alt = "copy" />
                           </li>
-                          <li>Include hashtags 
+                          <li className="text-sm">Include hashtags: 
                             <code> #DyfusionLaunch</code>, 
                             <code> #TweetToEarn</code>, 
                             <code> #Web3RevolutionNow</code>
                             <code><Image className='inline-flex ml-5' onClick={handleCopy2} src={copy_url2} width={30} height={30} alt = "copy" /></code>
                           </li>
-                          <li>Do not copy others&apos; tweets</li>
-                          <li>Copy your tweet link and paste it here to validate </li>
-                          <li>Click Validate Tweet button to finish</li>
+                          <li className="text-sm">Do not copy others&apos; tweets</li>
+                          <li className="text-sm"> Copy your tweet link and paste it here to validate </li>
+                          <li className="text-sm"> Click Validate Tweet button to finish</li>
                         </ul>
+                      </CardContent>
+                     </div>
 
-                      
+                    <div className="bg-[#00000000]">
                       <CardContent className="p-4 space-y-4">
                         <Input
                           placeholder="Paste your tweet URL here..."
@@ -467,25 +469,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Connect Wallet
                         </Button>
                         }
-                        <div className="text-red-400">{status}</div>
-                        <div className="mt-4">
-                          <p className="text-sm">Your referral link:</p>
-                          <div className="bg-gray-700 p-2 rounded mt-1 text-sm break-all">
-                            https://dyfusion.app/ref/your-user-id
-                          </div>
-                          <button
-                            className="mt-2 text-blue-400 underline text-sm"
-                            onClick={() => navigator.clipboard.writeText('https://dyfusion.app/ref/your-user-id')}
-                          >
-                            Copy Referral Link
-                          </button>
-                        </div>
-                      </CardContent>
-                     <br/>
-                     <li>
+                        <div className="text-red-400">{status}</div><br/>
+                        <ul className="list-disc list-inside">
+                         <li className="text-sm">
                         🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
-                        <span className="text-sm text-gray-400">Time left: 
-                              <div className="flex justify-left items-center gap-6">
+                        <li className='text-sm mb-5'>Time Left</li>
+                        <span className="text-sm text-gray-400">
+                              <div className="flex justify-left items-center gap-3">
                                  <div className="flex flex-col items-center">
                                   <div className="w-10 h-10 md:w-10 md:h-10 bg-black text-cyan-300 rounded-full border-4 border-cyan-500 flex items-center justify-center text-sm font-mono shadow-lg">
                                     {days}
@@ -515,13 +505,23 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                         </span>
                         <br />
                         Successful referrals: {referrals} / 7
-                      </li>
-                    <br/>
-
+                         </li>
+                        </ul>
+                      
+                        <div className="mt-4">
+                          <p className="text-sm">Your referral link:</p>
+                          <div className="bg-gray-700 p-2 rounded mt-1 text-sm break-all">
+                            https://dyfusion.app/ref/your-user-id
+                          </div>
+                          <button
+                            className="mt-2 text-blue-400 underline text-sm"
+                            onClick={() => navigator.clipboard.writeText('https://dyfusion.app/ref/your-user-id')}
+                          >
+                            Copy Referral Link
+                          </button>
+                        </div>
                       </CardContent>
-                    </Card>
-
-                    
+                    </div>
                   </div>
 
                   
@@ -532,7 +532,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
         <TabsContent value="gammaminers">
           <Image className='rounded-xl' src="/gamma.png" width={2080} height={600}  alt="gamma-banner" />
-          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center mt-5">
+          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center justify-center text-center">
               <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
               {/* Placeholder 3D NFT pass image */}
@@ -556,7 +556,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         </TabsContent>
         <TabsContent value="deltaminers">
           <Image className='rounded-xl' src="/delta.png" width={2080} height={600}  alt="delta-banner" />
-          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center mt-5">
+          <div className="min-h-screen bg-[#00000000] text-white p-8 flex flex-col items-center text-center">
                 <h1 className="text-4xl font-bold text-yellow-500 mb-8">COMING SOON</h1>
 
                 {/* Placeholder images section */}
