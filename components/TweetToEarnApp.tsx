@@ -274,7 +274,7 @@ export default function TweetToEarnApp() {
         if (typeof window !== 'undefined')
     
         {
-          window.open("https://t.me/dyfusionchain", "_blank", "noopener,noreferrer");
+          window.open("https://t.me/@dyfusionchain_bot", "_blank", "noopener,noreferrer");
         }
     }
 
