@@ -1,43 +1,34 @@
+// /pages/api/telegram.ts
+
 import { Telegraf } from 'telegraf';
-import  { db }  from "../../lib/db";
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-
-// ✅ Initialize the bot
+// Your bot token (store in .env.local as BOT_TOKEN)
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
 
+// Handle /start command
 bot.start(async (ctx) => {
-  
-  const userId = ctx.from.id;
-  const username = ctx.from.username || '';  
-  const member = await ctx.telegram.getChatMember(process.env.TELEGRAM_GROUP_ID!, userId);
-
-if (
-    member.status === 'member' ||
-    member.status === 'creator' ||
-    member.status === 'administrator'
-  ) {
-   // ctx.reply('✅ You have already joined the group. Thanks!');
-      try {
-            await db.query(
-            `INSERT INTO users (user_id, username)
-            VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE username = ?`,
-            [userId, username, username]
-            );
-
-            ctx.reply(`👋 Hello ${username}! You've been registered successfully.`);
-
-
-        } catch (err) {
-            console.error('DB Insert Error:', err);
-            ctx.reply('⚠️ Failed to save your details. Please try again later.');
-        }
-        
-  } else {
-    ctx.reply('❌ Please join our Telegram group before proceeding: https://t.me/dyfusion');
-  }
-
-  
+  await ctx.reply("👋 Welcome! You're now connected to the Dyfusion Bot.");
 });
 
-bot.launch();
+// This disables Vercel's default body parsing
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+// Webhook handler
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    try {
+      await bot.handleUpdate(req.body);
+      res.status(200).send('OK');
+    } catch (error) {
+      console.error('Bot error:', error);
+      res.status(500).send('Error processing update');
+    }
+  } else {
+    res.status(200).send('This is the Telegram bot endpoint.');
+  }
+}
