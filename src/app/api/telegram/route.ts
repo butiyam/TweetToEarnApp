@@ -5,7 +5,7 @@ import  { db }  from "../../lib/db";
 // ✅ Initialize the bot
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
 
-bot.start((ctx) => {
+bot.start(async (ctx) => {
   
   const userId = ctx.from.id;
   const username = ctx.from.username || '';
