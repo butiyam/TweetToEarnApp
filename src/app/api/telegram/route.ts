@@ -9,7 +9,6 @@ bot.start(async (ctx) => {
   
   const userId = ctx.from.id;
   const username = ctx.from.username || '';
-  const firstName = ctx.from.first_name || '';
 
    try {
     await db.query(
@@ -24,7 +23,6 @@ bot.start(async (ctx) => {
     console.error('DB Insert Error:', err);
     ctx.reply('⚠️ Failed to save your details. Please try again later.');
   }
-
-);
+});
 
 bot.launch();
