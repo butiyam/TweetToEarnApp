@@ -17,8 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 export default function TweetToEarnApp() {
     
     const params = useParams();
-    const  notifyErrorMsg = (msg) => toast.error(msg);
-    const  notifySuccess = (msg) => toast.success(msg);
+    const  notifyErrorMsg = (msg : string) => toast.error(msg);
+    const  notifySuccess = (msg : string) => toast.success(msg);
     
    const [copy_url1, setURL1] = useState('/copy.svg');
    const [copy_url2, setURL2] = useState('/copy.svg'); 
