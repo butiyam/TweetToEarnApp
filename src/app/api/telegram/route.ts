@@ -9,7 +9,6 @@ bot.start(async (ctx) => {
   
   const userId = ctx.from.id;
   const username = ctx.from.username || '';  
-  const firstname = ctx.from.first_name || '';
   const member = await ctx.telegram.getChatMember(process.env.TELEGRAM_GROUP_ID!, userId);
 
 if (
@@ -26,7 +25,8 @@ if (
             [userId, username, username]
             );
 
-            ctx.reply(`👋 Hello ${firstname}! Please join our group to continue: https://t.me/dyfusion`);
+            ctx.reply(`👋 Hello ${username}! You've been registered successfully.`);
+
 
         } catch (err) {
             console.error('DB Insert Error:', err);
@@ -38,30 +38,6 @@ if (
   }
 
   
-});
-
-// Command to verify group membership
-bot.command('verify', async (ctx) => {
-  const userId = ctx.from?.id;
-
-  try {
-    const res = await ctx.telegram.getChatMember(process.env.TELEGRAM_GROUP_ID!, userId);
-
-    if (['creator', 'administrator', 'member'].includes(res.status)) {
-      ctx.reply('✅ You have joined the group!');
-
-      await db.query(
-        'UPDATE users SET telegram_joined = ? WHERE user_id = ?',
-        [1, userId]
-      );
-    } else {
-      ctx.reply('❌ You haven’t joined the group yet.');
-    }
-
-  } catch (err) {
-    console.error(err);
-    ctx.reply('⚠️ Could not verify. Maybe you haven’t joined or the bot is not admin.');
-  }
 });
 
 bot.launch();
