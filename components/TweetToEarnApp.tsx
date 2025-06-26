@@ -1,11 +1,13 @@
 "use client";
+import { useParams } from 'next/navigation';
+
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 import { useState, useEffect } from "react";
 import  CardContent  from "./ui/CardContent";
 import  Button  from "./ui/Button";
 import  Input  from "./ui/Input";
 import Loader from './Loader';
-
 
 import { useAppKit } from "@reown/appkit/react";
 import { useAccount } from "wagmi";
@@ -13,10 +15,17 @@ import { useAccount } from "wagmi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 
 export default function TweetToEarnApp() {
-
+    
+    const params = useParams();
+    const  notifyErrorMsg = (msg) => toast.error(msg);
+    const  notifySuccess = (msg) => toast.success(msg);
+    
    const [copy_url1, setURL1] = useState('/copy.svg');
    const [copy_url2, setURL2] = useState('/copy.svg'); 
-   const [loading, setLoading] = useState(false);
+   const [loading, setLoading] = useState(true);
+   const [processed, setProcessed] = useState(false);
+   const[referralURL, setReferralURL] = useState('');
+   const [referral, setReferralAddress] = useState('');
 
   // for alpha miners tab
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
@@ -103,17 +112,17 @@ export default function TweetToEarnApp() {
 
   const completeQuest = () => {
   if(!hasJoinedX){
-    setStatus("Follow us on X first");
+    notifyErrorMsg('Follow us on X first');
     return;
   }
 
   if(!hasShared){
-    setStatus("Like, Comment & Share pinned post first");
+    notifyErrorMsg("Like, Comment & Share pinned post first");
     return;
   }
 
   if(!hasJoinedTG){
-    setStatus("Join our Telegram Channel first");
+    notifyErrorMsg("Join our Telegram Channel first");
     return;
   }
 
@@ -134,9 +143,6 @@ export default function TweetToEarnApp() {
   const [tweetUrl, setTweetUrl] = useState("");
   const [user, setUsername] = useState("");
   const [points, setPoints] = useState(0);
-  const [status, setStatus] = useState("");
-
-
 
   const fetchUserStats = async() => {
 
@@ -144,9 +150,41 @@ export default function TweetToEarnApp() {
        const res = await fetch(`/api/userBuyWallet?wallet_address=${encodeURIComponent(address || '')}`);
        const data = await res.json();
 
-      if (!res.ok || !data.points) throw new Error(data.error || "Failed to fetch user points");
+      if (!res.ok) throw new Error(data.error || "Failed to fetch user points");
       setPoints(data.points);
       setUsername(data.username);
+
+
+       let referral = params.query?.toString();
+      if(referral === undefined){
+          referral = "0x0000000000000000000000000000000000000000";
+      }
+  
+      setReferralAddress(referral);
+      
+
+      const protocol =  window.location.protocol;
+      const hostname =  window.location.hostname;
+      let url = protocol+hostname;
+      if(hostname === 'localhost'){
+          url = protocol+hostname+':3000/';
+      }
+  
+      setReferralURL(url+'?referral='+address);
+
+      if(data.x_joined == 1){
+        setHasJoinedX(true);
+      }
+
+      if(data.has_shared){
+        setHasShared(true);
+      }
+
+      if(data.telegram_joined){
+        setHasJoinedTG(true);
+      }
+
+      setLoading(false);
 
     } catch (error) {
       console.log(error);
@@ -155,17 +193,18 @@ export default function TweetToEarnApp() {
 
   }
 
-  const validateClick =  async(media: number,coins: number) => {
-    try {
+  const validateClick =  async(media: number) => {
+  
+      try {
       if(media === 1){
-        setHasJoinedX(true);
-        setPoints(points+coins);
-        console.log(coins);
 
+      setHasJoinedX(true);
+      
       const tweetRes = await fetch("/api/credit-coins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          type: 1,
           wallet_address: address,
         }),
       });
@@ -173,22 +212,72 @@ export default function TweetToEarnApp() {
       const resData = await tweetRes.json()
 
       if(resData.error) {
-       setStatus(resData.error) 
+       notifyErrorMsg(resData.error) 
       }
 
       if(resData.message) {
-       setStatus(resData.message) 
+       notifySuccess(resData.message) 
       }
-
+    if (typeof window !== 'undefined')
+    {
+      window.open("https://x.com/dyfusionchain?t=I5hv2La_ltJpZ-q3S26UZA&s=09", "_blank", "noopener,noreferrer");
+    }
       }
       else if(media === 2){
         setHasShared(true);
-        setPoints(points+coins);
+        const tweetRes = await fetch("/api/credit-coins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: 2,
+          wallet_address: address,
+        }),
+      });
+
+        const resData = await tweetRes.json()
+
+        if(resData.error) {
+        notifyErrorMsg(resData.error) 
+        }
+
+        if(resData.message) {
+        notifySuccess(resData.message) 
+        }
+
+     if (typeof window !== 'undefined')
+     {
+        window.open("https://x.com/dyfusionchain/status/1936494464832340310", "_blank", "noopener,noreferrer");
+     }
+
       }else{
          setHasJoinedTG(true);
-         setPoints(points+coins);
-      }
 
+         const tweetRes = await fetch("/api/credit-coins", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              type: 3,
+              wallet_address: address,
+            }),
+          });
+
+          const resData = await tweetRes.json()
+
+          if(resData.error) {
+          notifyErrorMsg(resData.error) 
+          }
+
+          if(resData.message) {
+          notifySuccess(resData.message) 
+          }
+        if (typeof window !== 'undefined')
+    
+        {
+          window.open("https://t.me/dyfusionchain", "_blank", "noopener,noreferrer");
+        }
+    }
+
+     await fetchUserStats();
 
     } catch (error) {
       console.log(error)
@@ -196,8 +285,9 @@ export default function TweetToEarnApp() {
   }
   const validateTweet =  async() => {
     try {
+
+      setProcessed(true);
       const tweetText = await fetchTweetContent(tweetUrl);
-      console.log(tweetText.hashtags);
       //setUsername(tweetText.username)
       const hasMention = tweetText.text.includes("@dyfusionchain");
       const hasAllHashtags = ["DyfusionLaunch", "Web3RevolutionNow", "TweetToEarn"].every(tag => tweetText.hashtags.includes(tag));
@@ -220,11 +310,11 @@ export default function TweetToEarnApp() {
       const resData = await tweetRes.json()
 
       if(resData.error) {
-       setStatus(resData.error) 
+       notifyErrorMsg(resData.error) 
       }
 
       if(resData.message) {
-       setStatus(resData.message) 
+       notifySuccess(resData.message) 
       }
 
       const res = await fetch(`/api/user?username=${encodeURIComponent(tweetText.username)}`);
@@ -235,12 +325,14 @@ export default function TweetToEarnApp() {
 
 
       } else {
-        setStatus("Tweet is missing required handle or hashtags.");
+        notifyErrorMsg("Tweet is missing required handle or hashtags.");
       }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      setStatus("Failed to verify tweet. Make sure the URL is public and valid.");
+      notifyErrorMsg("Failed to verify tweet. Make sure the URL is public and valid.");
     }
+
+    setProcessed(false);
   };
 
  interface TweetData {
@@ -314,7 +406,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         <div>👤 {user}</div>
         <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
           Coins:
-          <span className="text-yellow-500">{points}</span>
+          <span className="text-yellow-500">{points.toLocaleString()}</span>
           <Image src="/coin.png" width={40} height={40}  alt="coin"  />
         </div>
 
@@ -442,21 +534,28 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     <h2 className="text-xl font-bold mb-4">🎯 Welcome Quest</h2>
                     <ul className="space-y-2">
                       <li>✅ Follow us on X  
-                        <button onClick={ ()=> validateClick (1,100000)}
-                           className="bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl" >
-                        <a href="https://x.com/dyfusionchain?t=I5hv2La_ltJpZ-q3S26UZA&s=09" target='_blank'>  Start</a>
+                        <button disabled = {hasJoinedX} onClick={ ()=> validateClick (1)}
+                          className= { hasJoinedX ? 'bg-gray-700 ml-2 mr-2  px-6 rounded-xl cursor-not-allowed' 
+                                                           : 'bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl cursor-pointer'
+                          } >
+                           Start
                         </button>
                      +100K coins</li>
                       <li>✅ Like, Comment & Share pinned post 
-                        <button onClick={ ()=> validateClick (2,50000)}
-                           className="bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl" >
-                          <a href="https://x.com/dyfusionchain/status/1936494464832340310" target='_blank'>  Start</a>
+                        <button disabled={hasShared} onClick={ ()=> validateClick (2)}
+                            className= { hasShared ? 'bg-gray-700 ml-2 mr-2  px-6 rounded-xl cursor-not-allowed' 
+                                                    : 'bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl cursor-pointer'
+                          }
+                          >
+                         Start
                         </button>
                         +50K coins</li>
                       <li>✅ Join our Telegram Channel 
-                        <button onClick={ ()=> validateClick (3,100000)}
-                           className="bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl" >
-                          <a href="https://t.me/dyfusionchain" target='_blank' > Start</a>
+                        <button disabled={hasJoinedTG} onClick={ ()=> validateClick (3)}
+                           className= { hasJoinedTG ? 'bg-gray-700 ml-2 mr-2  px-6 rounded-xl cursor-not-allowed' 
+                                                           : 'bg-blue-600 ml-2 mr-2 hover:bg-blue-400 px-6 rounded-xl cursor-pointer'
+                          } >
+                          Start
                         </button>
                         +100K coins</li>
                      
@@ -468,7 +567,6 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     >
                       Mark Quest as Complete
                     </button>
-                    <div className="text-red-400 mt-5">{status}</div><br/>
                     
                   </div>
                 ) : (
@@ -515,8 +613,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                         />
                         {isConnected ?
                         <Button 
+                        disabled={processed}
                         onClick={ validateTweet }>
-                          ✅ Validate Tweet
+                          {processed ?
+                          <p className="text-lg animate-pulse">Processing...</p>
+                          :
+                          "✅ Validate Tweet"
+                          }
                         </Button>
                         :
                         <Button 
@@ -526,7 +629,6 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Connect Wallet
                         </Button>
                         }
-                        <div className="text-red-400">{status}</div><br/>
                         <ul className="list-disc list-inside">
                          <li className="text-sm">
                         🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
@@ -566,13 +668,12 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                         </ul>
                       
                         <div className="mt-4">
-                          <p className="text-sm">Your referral link:</p>
-                          <div className="bg-gray-700 p-2 rounded mt-1 text-sm break-all">
-                            https://dyfusion.app/ref/your-user-id
-                          </div>
+                          <p className="bg-gray-700 lex break-all mt-1 p-2 rounded text-sm">Your referral link:
+                              {' '+ referralURL.substring(0,25)+'...'+referralURL.substring(38,42)+' '}
+                          </p>
                           <button
-                            className="mt-2 text-blue-400 underline text-sm"
-                            onClick={() => navigator.clipboard.writeText('https://dyfusion.app/ref/your-user-id')}
+                            className="mt-2 text-blue-400 underline text-sm cursor-pointer"
+                            onClick={() => navigator.clipboard.writeText(referralURL)}
                           >
                             Copy Referral Link
                           </button>
