@@ -1,15 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from "next/server";
 import  { db }  from "../../lib/db";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
+export async function POST(req: NextRequest) {
 
-  const { user_id, username } = req.body;
+  const { user_id, username } = await req.json();
 
   if (!user_id) {
-    return res.status(400).json({ error: 'Missing user_id' });
+    return NextResponse.json({ error: "Missing user id" }, { status: 400 });
   }
 
   await db.query(
@@ -18,9 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
 
-  return res.status(200).json({
+  return NextResponse.json({
     ok: true,
     message: 'User saved successfully',
     user: user_id,
-  });
+  },
+    {
+        status: 200
+    }
+  );
 }
