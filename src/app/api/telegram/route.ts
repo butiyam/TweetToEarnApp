@@ -42,6 +42,8 @@ Share this to earn bonus coins!`, {
   });
 });
 
+bot.launch();
+
 export const config = {
   api: {
     bodyParser: false,
