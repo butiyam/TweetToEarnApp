@@ -25,6 +25,7 @@ export default function TweetToEarnApp() {
    const [loading, setLoading] = useState(true);
    const [processed, setProcessed] = useState(false);
    const[referralURL, setReferralURL] = useState('');
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [referral, setReferralAddress] = useState('');
 
   // for alpha miners tab
