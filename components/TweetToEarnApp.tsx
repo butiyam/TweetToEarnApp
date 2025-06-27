@@ -24,6 +24,10 @@ export default function TweetToEarnApp() {
     const  notifyErrorMsg = (msg : string) => toast.error(msg);
     const  notifySuccess = (msg : string) => toast.success(msg);
     
+   const  [copyMsg, setCopyMsg] = useState("");
+   const  [copyMsg2, setCopyMsg2] = useState("");
+   const  [copyMsg3, setCopyMsg3] = useState("");
+   
    const [copy_url1, setURL1] = useState('/copy.svg');
    const [copy_url2, setURL2] = useState('/copy.svg'); 
    const [loading, setLoading] = useState(true);
@@ -92,20 +96,35 @@ export default function TweetToEarnApp() {
 
   const handleCopy = () => {
    setURL1('/copied.svg');
+   setCopyMsg("Copied");
       navigator.clipboard.writeText('@dyfusionchain');
      setTimeout(() => {
+      setCopyMsg("");
    setURL1('/copy.svg');
     }, 3000);
   };
 
   const handleCopy2 = () => {
    setURL2('/copied.svg');
+   setCopyMsg2("Copied");
       navigator.clipboard.writeText('#DyfusionLaunch, #TweetToEarn, #Web3RevolutionNow');
    setTimeout(() => {
+    setCopyMsg2("");
    setURL2('/copy.svg');
     }, 3000);
   };
+  
+  const handleCopy3 = () => {
 
+   setCopyMsg3("Copied");
+    navigator.clipboard.writeText(referralURL)
+   
+    setTimeout(() => {
+    setCopyMsg3("");
+    }, 3000);
+  };
+
+  
   const completeQuest = async () => {
   if(!hasJoinedX){
     notifyErrorMsg('Follow us on X first');
@@ -663,12 +682,16 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           <li className="text-sm">Mention : 
                             <strong> @dyfusionchain</strong>
                           <Image className='inline-flex ml-5' onClick={handleCopy} src={copy_url1} width={30} height={30} alt = "copy" />
+                          {copyMsg}
                           </li>
                           <li className="text-sm">Include hashtags: 
                             <code> #DyfusionLaunch</code>, 
                             <code> #TweetToEarn</code>, 
                             <code> #Web3RevolutionNow</code>
-                            <code><Image className='inline-flex ml-5' onClick={handleCopy2} src={copy_url2} width={30} height={30} alt = "copy" /></code>
+                            <code>
+                              <Image className='inline-flex ml-5' onClick={handleCopy2} src={copy_url2} width={30} height={30} alt = "copy" />
+                            {copyMsg2}
+                            </code>
                           </li>
                           <li className="text-sm">Do not copy others&apos; tweets</li>
                           <li className="text-sm"> Copy your tweet link and paste it here to validate </li>
@@ -746,10 +769,11 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           </p>
                           <button
                             className="mt-2 text-blue-400 underline text-sm cursor-pointer"
-                            onClick={() => navigator.clipboard.writeText(referralURL)}
+                            onClick={ handleCopy3 }
                           >
                             Copy Referral Link
                           </button>
+                          {" "+copyMsg3}
                         </div>
                       </CardContent>
                     </div>
