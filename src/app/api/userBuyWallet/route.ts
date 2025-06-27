@@ -6,6 +6,8 @@ export async function GET(req: NextRequest) {
 
      const { searchParams } = new URL(req.url);
      const wallet_address = searchParams.get("wallet_address");
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     const referral = searchParams.get("referral");
  
     if (!wallet_address) {
       return NextResponse.json({ error: "Wallet Address is required" }, { status: 400 });
@@ -20,22 +22,51 @@ export async function GET(req: NextRequest) {
     const user = (userRows as any[])[0];
 
     if (!user) {
-      
-      await db.query(
-        "INSERT INTO users (wallet_address) VALUES (?)",
-        [wallet_address]
-      );  
+      if(referral === '0x0000000000000000000000000000000000000000'){
+        
+        await db.query(
+          "INSERT INTO users (wallet_address) VALUES (?)",
+          [wallet_address]
+        );  
+
+      }else{
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const  [exist]: any = await db.query("SELECT is_quest_completed FROM users WHERE wallet_address = ?", [referral]);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if((exist as any[]).length > 0){
+              
+              const user = exist[0];
+              if(user.is_quest_completed === 1){
+              
+                 await db.query(
+                "INSERT INTO users (wallet_address, referred_by) VALUES (?, ?)",
+                [wallet_address, referral]
+                );  
+             }
+
+            }
+            else{
+              await db.query(
+              "INSERT INTO users (wallet_address) VALUES (?)",
+              [wallet_address]
+              );  
+
+            }
+
+       
+      }
     }
 
     return NextResponse.json({
       
-      username: user.username,
-      points: user.points,
-      x_joined: user.x_joined,
-      has_shared: user.has_shared,
-      telegram_joined: user.telegram_joined,
-      is_quest_completed: user.is_quest_completed,
-      quest_completed: user.quest_completed,
+      username: user.username!,
+      points: user.points!,
+      x_joined: user.x_joined!,
+      has_shared: user.has_shared!,
+      telegram_joined: user.telegram_joined!,
+      is_quest_completed: user.is_quest_completed!,
+      quest_completed: user.quest_completed!,
 
     });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

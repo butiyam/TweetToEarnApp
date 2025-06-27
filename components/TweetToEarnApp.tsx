@@ -1,6 +1,6 @@
 "use client";
-import { useParams } from 'next/navigation';
 
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useState, useEffect } from "react";
@@ -20,7 +20,8 @@ const GROUP_ID = -1002488502739;
 
 export default function TweetToEarnApp() {
     
-    const params = useParams();
+    const searchParams = useSearchParams();
+
     const  notifyErrorMsg = (msg : string) => toast.error(msg);
     const  notifySuccess = (msg : string) => toast.success(msg);
     
@@ -158,7 +159,15 @@ export default function TweetToEarnApp() {
   const fetchUserStats = async() => {
 
     try {
-       const res = await fetch(`/api/userBuyWallet?wallet_address=${encodeURIComponent(address || '')}`);
+
+      let ref = searchParams.get('referral'); // '123'
+      if(ref === undefined){
+          ref = "0x0000000000000000000000000000000000000000";
+      }
+  
+      setReferralAddress(referral);
+
+       const res = await fetch(`/api/userBuyWallet?wallet_address=${encodeURIComponent(address || '')}&referral=${ref}`);
        const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Failed to fetch user details");
@@ -171,14 +180,6 @@ export default function TweetToEarnApp() {
         const d = new Date(data.quest_completed.toString());
         setStartTime(d);
       }
-
-       let referral = params.query?.toString();
-      if(referral === undefined){
-          referral = "0x0000000000000000000000000000000000000000";
-      }
-  
-      setReferralAddress(referral);
-      
 
       const protocol =  window.location.protocol;
       const hostname =  window.location.hostname;

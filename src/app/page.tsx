@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from 'next/navigation';
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
@@ -13,9 +14,19 @@ export default function LoginPage() {
   const router = useRouter(); // ✅ init router
   const [loading, setLoading] = useState(true);
   
+  const searchParams = useSearchParams();
+  const ref = searchParams.get('referral'); // '123'
+
+  
   useEffect(() => {
     if (isConnected) {
-      router.push("/dashboard"); // ✅ redirect when connected
+      
+      if(ref === null){
+          router.push(`/dashboard`); // ✅ redirect when connected
+
+      }else{
+          router.push(`/dashboard/?referral=${ref}`); // ✅ redirect when connected
+      }
     }
 
      const timer = setTimeout(() => {
@@ -24,7 +35,7 @@ export default function LoginPage() {
   
       return () => clearTimeout(timer);
 
-  }, [isConnected, router]);
+  }, [isConnected, router, ref]);
 
   return   loading ? <>
                       <div className="h-screen w-full flex items-center justify-center bg-black text-white text-xl">

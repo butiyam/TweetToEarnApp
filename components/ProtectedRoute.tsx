@@ -9,6 +9,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   const router = useRouter();
 
   useEffect(() => {
+      
     if (!isConnected) {
       router.push("/");
     }
