@@ -14,6 +14,10 @@ import { useAccount } from "wagmi";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 
+// Your bot token (store in .env.local as BOT_TOKEN)
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
+const GROUP_ID = process.env.TELEGRAM_GROUP_ID!;
+
 export default function TweetToEarnApp() {
     
     const params = useParams();
@@ -65,8 +69,8 @@ export default function TweetToEarnApp() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasJoined, setHasJoined] = useState(false);
   const [hasJoinedX, setHasJoinedX] = useState(false);
-  const [hasJoinedTG, setHasJoinedTG] = useState(false);
-  const [hasShared, setHasShared] = useState(false);
+  const [hasJoinedTG, setHasJoinedTG] = useState(true);
+  const [hasShared, setHasShared] = useState(true);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [email, setEmail] = useState("");
@@ -151,9 +155,13 @@ export default function TweetToEarnApp() {
        const res = await fetch(`/api/userBuyWallet?wallet_address=${encodeURIComponent(address || '')}`);
        const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Failed to fetch user points");
+      if (!res.ok) throw new Error(data.error || "Failed to fetch user details");
       setPoints(data.points);
       setUsername(data.username);
+
+      if(data.is_quest_completed){
+        setQuestComplete(true);
+      }
 
 
        let referral = params.query?.toString();
@@ -173,16 +181,22 @@ export default function TweetToEarnApp() {
   
       setReferralURL(url+'?referral='+address);
 
-      if(data.x_joined == 1){
+      if(data.x_joined === 1){
         setHasJoinedX(true);
+      }else{
+        setHasJoinedX(false);
       }
 
-      if(data.has_shared){
+      if(data.has_shared === 1){
         setHasShared(true);
+      }else{
+        setHasJoined(false);
       }
 
-      if(data.telegram_joined){
+      if(data.telegram_joined === 1){
         setHasJoinedTG(true);
+      }else{
+        setHasJoinedTG(false);
       }
 
       setLoading(false);
@@ -194,12 +208,56 @@ export default function TweetToEarnApp() {
 
   }
 
+  const verifyUsername = async(username: string) => {
+
+    try {
+
+    const checkUsername = await fetch("/api/check-username", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+        }),
+      });
+
+     const res =  await checkUsername.json();
+
+     console.log(res);
+
+     if(res['error']){
+      notifyErrorMsg("User Id not found!");
+      return;
+     } 
+
+     if(res['user_id']){
+     
+       const checkUserId = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${GROUP_ID}&user_id=${res['user_id']}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+     const matched =  await checkUserId.json();
+     console.log(matched)
+
+     }
+
+
+
+      //notifySuccess()
+      
+    } catch (error) {
+      console.log(error)
+      
+    }
+  }
+
   const validateClick =  async(media: number) => {
   
       try {
       if(media === 1){
 
       setHasJoinedX(true);
+      setHasShared(false);
       
       const tweetRes = await fetch("/api/credit-coins", {
         method: "POST",
@@ -226,6 +284,8 @@ export default function TweetToEarnApp() {
       }
       else if(media === 2){
         setHasShared(true);
+        setHasJoinedTG(false);
+
         const tweetRes = await fetch("/api/credit-coins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -253,28 +313,9 @@ export default function TweetToEarnApp() {
       }else{
          setHasJoinedTG(true);
 
-         const tweetRes = await fetch("/api/credit-coins", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              type: 3,
-              wallet_address: address,
-            }),
-          });
-
-          const resData = await tweetRes.json()
-
-          if(resData.error) {
-          notifyErrorMsg(resData.error) 
-          }
-
-          if(resData.message) {
-          notifySuccess(resData.message) 
-          }
         if (typeof window !== 'undefined')
-    
         {
-          window.open("https://t.me/@dyfusionchain_bot", "_blank", "noopener,noreferrer");
+          window.open("https://t.me/dyfusionchain_bot?start=from_dashboard", "_blank", "noopener,noreferrer");
         }
     }
 
@@ -559,7 +600,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Start
                         </button>
                         +100K coins</li>
-                     
+                        {hasJoinedTG ?
+                         <Input
+                          placeholder="Paste your telegram username here... like user123"
+                          onChange={(e) => verifyUsername(e.target.value)}
+                        />
+                        :<></>
+                         }
                     </ul>
 
                     <button

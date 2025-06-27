@@ -13,23 +13,22 @@ export async function GET(req: NextRequest) {
 
     // Get user info
     const [userRows] = await db.query(
-      "SELECT username, points, x_joined, has_shared, telegram_joined, is_quest_completed, referrals_count, quest_completed FROM users WHERE wallet_address = ?",
+      "SELECT * FROM users WHERE wallet_address = ?",
       [wallet_address]
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const user = (userRows as any[])[0];
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      
+      await db.query(
+        "INSERT INTO users (wallet_address) VALUES (?)",
+        [wallet_address]
+      );  
     }
 
-    // Get user's tweets
-    const [tweetRows] = await db.query(
-      "SELECT tweet_id, text, hashtags FROM tweets WHERE username = ? ORDER BY id DESC",
-      [user.username]
-    );
-
     return NextResponse.json({
+      
       username: user.username,
       points: user.points,
       x_joined: user.x_joined,
@@ -37,7 +36,7 @@ export async function GET(req: NextRequest) {
       telegram_joined: user.telegram_joined,
       is_quest_completed: user.is_quest_completed,
       quest_completed: user.quest_completed,
-      tweets: tweetRows,
+
     });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
