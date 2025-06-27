@@ -73,7 +73,7 @@ export default function TweetToEarnApp() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [hasJoined, setHasJoined] = useState(false);
   const [hasJoinedX, setHasJoinedX] = useState(false);
-  const [hasJoinedTG, setHasJoinedTG] = useState(true);
+  const [hasJoinedTG, setHasJoinedTG] = useState(false);
   const [hasShared, setHasShared] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -126,13 +126,18 @@ export default function TweetToEarnApp() {
 
   
   const completeQuest = async () => {
+  
+    setProcessed(true);
+  
   if(!hasJoinedX){
     notifyErrorMsg('Follow us on X first');
+    setProcessed(false);
     return;
   }
 
   if(!hasShared){
     notifyErrorMsg("Like, Comment & Share pinned post first");
+    setProcessed(false);
     return;
   }
 
@@ -196,13 +201,6 @@ export default function TweetToEarnApp() {
         setHasJoined(false);
       }
 
-      if(data.telegram_joined === 1){
-        setHasJoinedTG(true);
-      }else{
-        setHasJoinedTG(false);
-      }
-
-
       setLoading(false);
 
     } catch (error) {
@@ -213,10 +211,15 @@ export default function TweetToEarnApp() {
   }
 
   const verifyUsername = async() => {
-
+    
     const username = tgUsername;
     try {
 
+      if(!hasJoinedTG){
+        notifyErrorMsg('Join our Telegram Channel First!');
+        setProcessed(false);
+        return;
+      }
     const checkUsername = await fetch("/api/check-username", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -229,6 +232,7 @@ export default function TweetToEarnApp() {
 
      if(res['error']){
       notifyErrorMsg(res['error']);
+      setProcessed(false);
       return;
      } 
 
@@ -241,11 +245,9 @@ export default function TweetToEarnApp() {
 
      const matched =  await checkUserId.json();
 
-
-     console.log(matched.result)
-
      if(matched.result.status === 'left'){
       notifyErrorMsg("You have left our Channel!");
+      setProcessed(false);
       return;
      }
   
@@ -265,7 +267,7 @@ export default function TweetToEarnApp() {
         const resData = await Res.json()
 
         if(resData.error) {
-        notifyErrorMsg(resData.error) 
+        notifyErrorMsg(resData.error);
         }
 
         if(resData.message) {
@@ -289,6 +291,9 @@ export default function TweetToEarnApp() {
       console.log(error)
       
     }
+        setProcessed(false);
+    
+
   }
 
   const validateClick =  async(media: number) => {
@@ -655,9 +660,14 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
                     <button
                       onClick={completeQuest}
+                      disabled={processed}
                       className="mt-4 bg-blue-400 hover:bg-blue-600 px-6 py-2 rounded-xl"
                     >
-                      Mark Quest as Complete
+                      {processed ?
+                          <p className="text-lg animate-pulse">Processing...</p>
+                          :
+                          "Mark Quest as Complete"
+                          }
                     </button>
                     
                   </div>

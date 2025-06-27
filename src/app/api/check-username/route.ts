@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const { username }: { username: string } = await req.json();
 
   if (!username) {
-    return NextResponse.json({ error: "Missing input" }, { status: 400 });
+    return NextResponse.json({ error: "Username missing!" }, { status: 400 });
   }
 
   try {
