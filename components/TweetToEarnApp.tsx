@@ -15,8 +15,8 @@ import { useAccount } from "wagmi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 
 // Your bot token (store in .env.local as BOT_TOKEN)
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
-const GROUP_ID = process.env.TELEGRAM_GROUP_ID!;
+const BOT_TOKEN = '8058260282:AAG2j6O2brw6KHvnKiXhbsEVmcsmffxXfvc';
+const GROUP_ID = -1002488502739;
 
 export default function TweetToEarnApp() {
     
@@ -74,7 +74,7 @@ export default function TweetToEarnApp() {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [email, setEmail] = useState("");
-  const [startTime, setStartTime] = useState<number | null>(null);
+  const [startTime, setStartTime] = useState<Date | null>(null);
   const [days, setDays] = useState(3);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
@@ -89,15 +89,6 @@ export default function TweetToEarnApp() {
     setReferrals((prev) => prev + 1);
   };
 
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-   const handleJoin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setTimeout(() => {
-      setHasJoined(true);
-      setStartTime(Date.now());
-    }, 1000);
-  };
 
   const handleCopy = () => {
    setURL1('/copied.svg');
@@ -115,7 +106,7 @@ export default function TweetToEarnApp() {
     }, 3000);
   };
 
-  const completeQuest = () => {
+  const completeQuest = async () => {
   if(!hasJoinedX){
     notifyErrorMsg('Follow us on X first');
     return;
@@ -126,19 +117,9 @@ export default function TweetToEarnApp() {
     return;
   }
 
-  if(!hasJoinedTG){
-    notifyErrorMsg("Join our Telegram Channel first");
-    return;
-  }
 
-    switchTab();
-    setQuestComplete(true);
-    setTweetToEarnUnlocked(true);
-  
-        setTimeout(() => {
-      setHasJoined(true);
-      setStartTime(Date.now());
-    }, 1000);
+  await verifyUsername();
+
 
   };
 
@@ -148,6 +129,7 @@ export default function TweetToEarnApp() {
   const [tweetUrl, setTweetUrl] = useState("");
   const [user, setUsername] = useState("");
   const [points, setPoints] = useState(0);
+  const [tgUsername, setTGUsername] = useState("");
 
   const fetchUserStats = async() => {
 
@@ -161,8 +143,10 @@ export default function TweetToEarnApp() {
 
       if(data.is_quest_completed){
         setQuestComplete(true);
+        setTweetToEarnUnlocked(true);
+        const d = new Date(data.quest_completed.toString());
+        setStartTime(d);
       }
-
 
        let referral = params.query?.toString();
       if(referral === undefined){
@@ -199,6 +183,7 @@ export default function TweetToEarnApp() {
         setHasJoinedTG(false);
       }
 
+
       setLoading(false);
 
     } catch (error) {
@@ -208,8 +193,9 @@ export default function TweetToEarnApp() {
 
   }
 
-  const verifyUsername = async(username: string) => {
+  const verifyUsername = async() => {
 
+    const username = tgUsername;
     try {
 
     const checkUsername = await fetch("/api/check-username", {
@@ -222,10 +208,8 @@ export default function TweetToEarnApp() {
 
      const res =  await checkUsername.json();
 
-     console.log(res);
-
      if(res['error']){
-      notifyErrorMsg("User Id not found!");
+      notifyErrorMsg(res['error']);
       return;
      } 
 
@@ -237,14 +221,51 @@ export default function TweetToEarnApp() {
       });
 
      const matched =  await checkUserId.json();
-     console.log(matched)
+
+
+     console.log(matched.result)
+
+     if(matched.result.status === 'left'){
+      notifyErrorMsg("You have left our Channel!");
+      return;
+     }
+  
+     if(matched.result.status === 'member'){
+      console.log(matched.result.status);
+
+      const Res = await fetch("/api/credit-coins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: 3,
+          user_id: res['user_id'],
+          wallet_address: address,
+        }),
+      });
+
+        const resData = await Res.json()
+
+        if(resData.error) {
+        notifyErrorMsg(resData.error) 
+        }
+
+        if(resData.message) {
+        notifySuccess(resData.message) 
+        }
+
+            switchTab();
+    setQuestComplete(true);
+    setTweetToEarnUnlocked(true);
+  /*
+        setTimeout(() => {
+      setHasJoined(true);
+      setStartTime(Date.now());
+    }, 1000);*/
 
      }
 
+     }
 
-
-      //notifySuccess()
-      
     } catch (error) {
       console.log(error)
       
@@ -277,49 +298,53 @@ export default function TweetToEarnApp() {
       if(resData.message) {
        notifySuccess(resData.message) 
       }
-    if (typeof window !== 'undefined')
-    {
-      window.open("https://x.com/dyfusionchain?t=I5hv2La_ltJpZ-q3S26UZA&s=09", "_blank", "noopener,noreferrer");
-    }
+      if (typeof window !== 'undefined')
+      {
+        window.open("https://x.com/dyfusionchain?t=I5hv2La_ltJpZ-q3S26UZA&s=09", "_blank", "noopener,noreferrer");
       }
-      else if(media === 2){
-        setHasShared(true);
-        setHasJoinedTG(false);
 
-        const tweetRes = await fetch("/api/credit-coins", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: 2,
-          wallet_address: address,
-        }),
-      });
+         await fetchUserStats();
+      }
+      
+      if(media === 2){
+          setHasShared(true);
+          setHasJoinedTG(false);
 
-        const resData = await tweetRes.json()
+          const tweetRes = await fetch("/api/credit-coins", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: 2,
+            wallet_address: address,
+          }),
+        });
 
-        if(resData.error) {
-        notifyErrorMsg(resData.error) 
-        }
+          const resData = await tweetRes.json()
 
-        if(resData.message) {
-        notifySuccess(resData.message) 
-        }
+          if(resData.error) {
+          notifyErrorMsg(resData.error) 
+          }
 
-     if (typeof window !== 'undefined')
-     {
-        window.open("https://x.com/dyfusionchain/status/1936494464832340310", "_blank", "noopener,noreferrer");
-     }
+          if(resData.message) {
+          notifySuccess(resData.message) 
+          }
 
-      }else{
-         setHasJoinedTG(true);
+      if (typeof window !== 'undefined')
+      {
+          window.open("https://x.com/dyfusionchain/status/1936494464832340310", "_blank", "noopener,noreferrer");
+      }
+      await fetchUserStats();
+      }
 
+      if(media === 3)
+      {
+        setHasJoinedTG(true);
         if (typeof window !== 'undefined')
         {
           window.open("https://t.me/dyfusionchain_bot?start=from_dashboard", "_blank", "noopener,noreferrer");
         }
-    }
+      }
 
-     await fetchUserStats();
 
     } catch (error) {
       console.log(error)
@@ -418,7 +443,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
    if (!startTime) return;
 
     const interval = setInterval(() => {
-      const diff = 3 * 24 * 60 * 60 * 1000 - (Date.now() - startTime);
+      const diff = 3 * 24 * 60 * 60 * 1000 - (Date.now() - Number(startTime));
       if (diff <= 0) {
         clearInterval(interval);
         return;
@@ -435,7 +460,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
     }, 1000);
     
-    return () => clearInterval(interval);
+    //return () => clearInterval(interval);
 
   });
 
@@ -600,13 +625,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Start
                         </button>
                         +100K coins</li>
-                        {hasJoinedTG ?
+                    
                          <Input
+                          value={tgUsername}
                           placeholder="Paste your telegram username here... like user123"
-                          onChange={(e) => verifyUsername(e.target.value)}
+                          onChange={(e) => setTGUsername(e.target.value)}
                         />
-                        :<></>
-                         }
+
                     </ul>
 
                     <button

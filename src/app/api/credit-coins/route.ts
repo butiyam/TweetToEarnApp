@@ -6,8 +6,11 @@ const TG = process.env.TG_FOLLOW_COINS;
 const SHARED = process.env.POST_SHARED_COINS ;
 
 export async function POST(req: NextRequest) {
+  
+  const timestamp = new Date();
+  
   try {
-    const { type, wallet_address } = await req.json();
+    const { user_id, type, wallet_address } = await req.json();
 
     if (!wallet_address ||  !type) {
       return NextResponse.json({ error: "Missing input" }, { status: 400 });
@@ -27,8 +30,8 @@ export async function POST(req: NextRequest) {
 
     if(type === 3)
      await db.query(
-        "UPDATE users SET  points = points + ?, telegram_joined = ? WHERE wallet_address = ?",
-        [TG, 1 ,wallet_address]
+        "UPDATE users SET user_id = ?, is_quest_completed = ?, points = points + ?, telegram_joined = ?, quest_completed = ? WHERE wallet_address = ?",
+        [user_id, 1,TG, 1 , timestamp, wallet_address]
         );
 
     return NextResponse.json({ message: 'Coins credited successfully' });
