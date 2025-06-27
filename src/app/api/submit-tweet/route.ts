@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import  { db }  from "../../lib/db";
 
+const COINS = process.env.POST_COINS;
+
 export async function POST(req: NextRequest) {
   try {
     const { tweetId, username, text, hashtags, wallet_address } = await req.json();
@@ -21,11 +23,9 @@ export async function POST(req: NextRequest) {
     );
 
     await db.query(
-      `INSERT INTO users (username, wallet_address, points)
-       VALUES (?, ?, 10)
-       ON DUPLICATE KEY UPDATE points = points + 200`,
-      [username, wallet_address]
-    );
+            "UPDATE users SET username = ?, points = points + ? WHERE wallet_address = ?",
+            [username, COINS, wallet_address]
+            );
 
     return NextResponse.json({ message: "Tweet validated successfully" });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
