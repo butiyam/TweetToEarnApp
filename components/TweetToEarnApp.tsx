@@ -74,7 +74,7 @@ export default function TweetToEarnApp() {
   const [hasJoined, setHasJoined] = useState(false);
   const [hasJoinedX, setHasJoinedX] = useState(false);
   const [hasJoinedTG, setHasJoinedTG] = useState(true);
-  const [hasShared, setHasShared] = useState(true);
+  const [hasShared, setHasShared] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [email, setEmail] = useState("");
