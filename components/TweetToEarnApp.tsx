@@ -640,6 +640,9 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
         }
     }
     
+    if(alpha_coins! > 0){
+     setIsInGodmode(true);
+    }
    if (!startTime) return;
 
     const interval = setInterval(() => {
@@ -744,7 +747,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             </div>
           )}
 
-          {isInGodmode && (
+          {isInGodmode && !showPaymentStep && (
             <div className="mt-10 p-6 rounded-2xl shadow">
               <h2 className="text-xl font-bold mb-2">🎉 Congratulations!</h2>
               <p className="text-lg ">
@@ -754,21 +757,27 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
             
           )}
 
-          {selectedAmount && isInGodmode && (
-            <div className="mt-4 text-yellow-500 text-lg">
+           <div className="mt-4 text-yellow-500 text-lg">
+            {selectedAmount && isInGodmode && !showPaymentStep && (
+           <>
               You purchased ${selectedAmount} worth of coins.<br />
               Your total Alpha allocation now is {alpha_coins?.toLocaleString()} coins.
              <br/>
+            </>
+             )}
+             {isInGodmode && !showPaymentStep && (
+
              <button
                 onClick={handleBuyMoreClick}
                 className="bg-blue-400 mt-5 hover:bg-blue-600 text-white px-6 py-2 rounded-xl text-lg"
               >
                 Buy More
               </button>
+              )}
             </div>
 
             
-          )}
+          
           
             
         </div>    
