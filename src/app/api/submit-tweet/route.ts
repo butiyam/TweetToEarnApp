@@ -22,14 +22,22 @@ export async function POST(req: NextRequest) {
     if ((existingText as any[]).length > 0) {
       return NextResponse.json({ error: "Tweet with same text content already submitted" }, { status: 409 });
     }
-
+    const [existingUser] = await db.query("SELECT username FROM users WHERE wallet_address = ?", [wallet_address]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((existingUser as any[]).length > 0) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const user = (existingUser as any[])[0];
+              if (user.username !== username) {
+                    return NextResponse.json({ error: "Tweet does't belongs to your account" }, { status: 409 });
+              }
+    }
 
     await db.query(
       "INSERT INTO tweets (tweet_id, username, text, hashtags) VALUES (?, ?, ?, ?)",
       [tweetId, username, text, hashtags.join(",")]
     );
 
-    const [existingUser] = await db.query("SELECT id FROM users WHERE username = ?", [username]);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((existingUser as any[]).length > 0) {
               await db.query(
