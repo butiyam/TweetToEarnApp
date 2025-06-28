@@ -17,16 +17,34 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Tweet already submitted" }, { status: 409 });
     }
 
+    const [existingText] = await db.query("SELECT id FROM tweets WHERE text = ?", [text]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((existingText as any[]).length > 0) {
+      return NextResponse.json({ error: "Tweet with same text content already submitted" }, { status: 409 });
+    }
+
+
     await db.query(
       "INSERT INTO tweets (tweet_id, username, text, hashtags) VALUES (?, ?, ?, ?)",
       [tweetId, username, text, hashtags.join(",")]
     );
 
-    await db.query(
-            "UPDATE users SET username = ?, points = points + ? WHERE wallet_address = ?",
-            [username, COINS, wallet_address]
-            );
+    const [existingUser] = await db.query("SELECT id FROM users WHERE username = ?", [username]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((existingUser as any[]).length > 0) {
+              await db.query(
+                "UPDATE users SET points = points + ? WHERE wallet_address = ?",
+                [COINS, wallet_address]
+                );
 
+    //  return NextResponse.json({ error: "Username already exist" }, { status: 409 });
+    }else{
+
+          await db.query(
+                  "UPDATE users SET username = ?, points = points + ? WHERE wallet_address = ?",
+                  [username, COINS, wallet_address]
+                  );
+    }
     return NextResponse.json({ message: "Tweet validated successfully" });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

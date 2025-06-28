@@ -266,7 +266,7 @@ export default function TweetToEarnApp() {
   const handleCopy2 = () => {
    setURL2('/copied.svg');
    setCopyMsg2("Copied");
-      navigator.clipboard.writeText('#DyfusionLaunch, #TweetToEarn, #Web3RevolutionNow');
+      navigator.clipboard.writeText('#DyfusionLaunch #TweetToEarn #Web3RevolutionNow');
    setTimeout(() => {
     setCopyMsg2("");
    setURL2('/copy.svg');
@@ -412,7 +412,11 @@ export default function TweetToEarnApp() {
       return;
      }
   
-     if(matched.result.status === 'member'){
+     if (
+        matched.result.status === 'member' ||
+        matched.result.status === 'creator' ||
+        matched.result.status === 'administrator'
+      ){
       console.log(matched.result.status);
 
       const Res = await fetch("/api/credit-coins", {
@@ -885,8 +889,8 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           {copyMsg}
                           </li>
                           <li className="text-sm">Include hashtags: 
-                            <code> #DyfusionLaunch</code>, 
-                            <code> #TweetToEarn</code>, 
+                            <code> #DyfusionLaunch</code>
+                            <code> #TweetToEarn</code>
                             <code> #Web3RevolutionNow</code>
                             <code>
                               <Image className='inline-flex ml-5' onClick={handleCopy2} src={copy_url2} width={30} height={30} alt = "copy" />
