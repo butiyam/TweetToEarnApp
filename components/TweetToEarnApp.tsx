@@ -13,8 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
 import { useAccount , useReadContract, useWriteContract , useChainId } from "wagmi"; 
 import { getClient } from '.././src/app/config/client'
 import tokenABI from ".././src/app/contractABI/ERC20ABI.json";
-import $ from "jquery"; 
-
 import { Web3 } from "web3";
 const Provider = new Web3.providers.HttpProvider("https://rpc.ankr.com/eth");
 const web3 = new Web3(Provider);
@@ -134,16 +132,8 @@ export default function TweetToEarnApp() {
 
      const publicClient = getClient(chainId);
 
-     const oldText = $(".btn"+selectedAmount).html();
-     $(".btn"+selectedAmount).addClass("animate-pulse");
-     $(".btn"+selectedAmount).attr("disabled",true);
-     $(".btn"+selectedAmount).html('Processing...');
-
      if(Number(selectedAmount) <= 0) {
         notifyErrorMsg('Please choose your package');
-           $(".btn"+selectedAmount).removeClass("animate-pulse");
-           $(".btn"+selectedAmount).attr("disabled",false);
-           $(".btn"+selectedAmount).html(oldText);
         return;
       }
 
@@ -153,9 +143,7 @@ export default function TweetToEarnApp() {
         //setBuyButtonState(false);
         //setBuyButtonText('Buy Now');
         notifyErrorMsg('Insufficient USDT Balance');
-           $(".btn"+selectedAmount).removeClass("animate-pulse");
-           $(".btn"+selectedAmount).attr("disabled",false);
-           $(".btn"+selectedAmount).html(oldText);
+
         return;
     
       }
@@ -259,10 +247,6 @@ export default function TweetToEarnApp() {
                     // setBuyButtonText('Buy Now');
                 }
           }
-
-          $(".btn"+selectedAmount).removeClass("animate-pulse");
-           $(".btn"+selectedAmount).attr("disabled", false);
-           $(".btn"+selectedAmount).html(oldText);
         
       await fetchUserStats();
            
