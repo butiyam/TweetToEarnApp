@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
 
-    const [rows] = await db.query("SELECT username, points FROM users ORDER BY points DESC LIMIT 100");
+    const [rows] = await db.query("SELECT username, points FROM users WHERE points != 0 ORDER BY points DESC LIMIT 100");
       
     return NextResponse.json(rows);
       

@@ -8,11 +8,16 @@ import  CardContent  from "./ui/CardContent";
 import  Button  from "./ui/Button";
 import  Input  from "./ui/Input";
 import Loader from './Loader';
-
 import { useAppKit } from "@reown/appkit/react";
-import { useAccount } from "wagmi";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/Tabs";
+import { useAccount , useReadContract, useWriteContract , useChainId } from "wagmi"; 
+import { getClient } from '.././src/app/config/client'
+import tokenABI from ".././src/app/contractABI/ERC20ABI.json";
+import $ from "jquery"; 
+
+import { Web3 } from "web3";
+const Provider = new Web3.providers.HttpProvider("https://rpc.ankr.com/eth");
+const web3 = new Web3(Provider);
 
 // Your bot token (store in .env.local as BOT_TOKEN)
 const BOT_TOKEN = '8058260282:AAG2j6O2brw6KHvnKiXhbsEVmcsmffxXfvc';
@@ -21,6 +26,8 @@ const GROUP_ID = -1002488502739;
 export default function TweetToEarnApp() {
     
     const searchParams = useSearchParams();
+
+    const {  data: hash, error, writeContractAsync } = useWriteContract()
 
     const  notifyErrorMsg = (msg : string) => toast.error(msg);
     const  notifySuccess = (msg : string) => toast.success(msg);
@@ -39,9 +46,26 @@ export default function TweetToEarnApp() {
 
   // for alpha miners tab
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
-  const [selectedCoinAmount, setSelectedCoinAmount] = useState<number | null>(null);
+  const [alpha_coins, setAlphaCoins] = useState<number | null>(null);
   const [isInGodmode, setIsInGodmode] = useState(false);
   const [showPaymentStep, setShowPaymentStep] = useState(false);
+
+    // usestate for wallet connect and connected
+  const { open } = useAppKit();
+  const chainId = useChainId();
+  const { isConnected, address } = useAccount();
+
+  const clientWallet : `0x${string}` = '0x342C1af49603F09B90201E6A22af7B6d3cEE3a77';
+  const usdt_address: Record<number, `0x${string}`> = {
+  1:  '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+  56: '0x55d398326f99059fF775485246999027B3197955',
+  137:'0xFb2a313Ad7a11Af0AA85fF54186a87202D07c6b3',
+  97: '0x43d79657de71A94F46891Ad5Ac6B3650404672eF'
+};
+
+  const [tokenBalance, setTokenBalance] = useState('');
+  const [allowanceUSDT, setAllowanceUSDT] = useState('');
+
   
   const priceList = [
     { usd: 1, coins: 10000 },
@@ -80,6 +104,7 @@ export default function TweetToEarnApp() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [email, setEmail] = useState("");
   const [startTime, setStartTime] = useState<Date | null>(null);
+  const [timeLeft ,setTimeLeft] = useState("");
   const [days, setDays] = useState(3);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
@@ -88,11 +113,159 @@ export default function TweetToEarnApp() {
   const [questComplete, setQuestComplete] = useState(false);
   const [tweetToEarnUnlocked, setTweetToEarnUnlocked] = useState(false);
 
-  // Simulate referral success
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const successfulReferral = () => {
-    setReferrals((prev) => prev + 1);
-  };
+    const { data: balanceUSDTData }  = useReadContract({
+      abi: tokenABI.abi,
+      address: usdt_address[chainId],
+      functionName: 'balanceOf',
+      args:[address],
+    })
+
+
+    const { data: allowanceUSDTData } = useReadContract({
+      abi: tokenABI.abi,
+      address: usdt_address[chainId],
+      functionName: 'allowance',
+      args:[address, clientWallet],
+
+    })
+
+   async function handleBuyToken(selectedAmount : number, selectedCoinAmount : number)  {
+
+     const publicClient = getClient(chainId);
+
+     const oldText = $(".btn"+selectedAmount).html();
+     $(".btn"+selectedAmount).addClass("animate-pulse");
+     $(".btn"+selectedAmount).attr("disabled",true);
+     $(".btn"+selectedAmount).html('Processing...');
+
+     if(Number(selectedAmount) <= 0) {
+        notifyErrorMsg('Please choose your package');
+           $(".btn"+selectedAmount).removeClass("animate-pulse");
+           $(".btn"+selectedAmount).attr("disabled",false);
+           $(".btn"+selectedAmount).html(oldText);
+        return;
+      }
+
+      console.log(selectedAmount)
+      console.log(tokenBalance.toString())
+      if(Number(selectedAmount) > Number(tokenBalance)){
+        //setBuyButtonState(false);
+        //setBuyButtonText('Buy Now');
+        notifyErrorMsg('Insufficient USDT Balance');
+           $(".btn"+selectedAmount).removeClass("animate-pulse");
+           $(".btn"+selectedAmount).attr("disabled",false);
+           $(".btn"+selectedAmount).html(oldText);
+        return;
+    
+      }
+
+
+          if(Number(allowanceUSDT) < Number(selectedAmount)) {
+      
+           try {
+            //setBuyButtonState(true);
+            //setBuyButtonText('Approving...');
+      
+            const hash = await  writeContractAsync({ 
+              abi: tokenABI.abi,
+              address: usdt_address[chainId],
+              functionName: 'approve',
+              args:[clientWallet, web3.utils.toWei((selectedAmount.toString()), 'ether')],
+            })
+      
+            const txn = await publicClient.waitForTransactionReceipt( { hash } );
+                
+            if(txn.status == "success"){
+              
+              notifySuccess('Approve TXN Successful'); 
+             // setBuyButtonText('Buying...');
+            
+                const hash = await  writeContractAsync({ 
+                  abi: tokenABI.abi,
+                  address: usdt_address[chainId],
+                  functionName: 'transfer',
+                  args:[clientWallet , web3.utils.toWei((selectedAmount.toString()), 'ether')],
+                })
+      
+                const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
+                if(txn2.status == "success"){
+                  notifySuccess('Buy TXN Successful'); 
+                //  setBuyButtonState(false);
+                //  setBuyButtonText('Buy Now');
+
+                    const checkUsername = await fetch("/api/credit-buy", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      users_id: users_id,
+                      txn_hash: txn2.transactionHash,
+                      wallet_address: address,
+                      coin_amount: selectedCoinAmount
+                    }),
+                  });
+
+                  const res =  await checkUsername.json();
+                  notifySuccess(res.message);
+                  setTimeout(handlePaymentSuccess, 2000); // Simulate payment
+                  
+                }
+        
+            }
+          }catch(error){
+                console.log(error);
+               // setBuyButtonState(false);
+               // setBuyButtonText('Buy Now');
+          }
+            
+          }else{
+
+              try {
+                  //setBuyButtonState(true);
+                  //setBuyButtonText('Buying...');
+            
+                      const hash = await  writeContractAsync({ 
+                        abi: tokenABI.abi,
+                        address: usdt_address[chainId],
+                        functionName: 'transfer',
+                        args:[clientWallet , selectedAmount],
+                      })
+            
+                      const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
+                      if(txn2.status == "success"){
+                    
+                        notifySuccess('Buy TXN Successful'); 
+                      //  setBuyButtonState(false);
+                      //  setBuyButtonText('Buy Now');
+                        const checkUsername = await fetch("/api/credit-buy", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            users_id: users_id,
+                            txn_hash: txn2.transactionHash,
+                            wallet_address: address,
+                            coin_amount: selectedCoinAmount
+                          }),
+                        });
+
+                        const res =  await checkUsername.json();
+                        notifySuccess(res.message);
+                        setTimeout(handlePaymentSuccess, 2000); // Simulate payment
+                      }
+              
+                }catch(error){
+                      console.log(error);
+                    // setBuyButtonState(false);
+                    // setBuyButtonText('Buy Now');
+                }
+          }
+
+          $(".btn"+selectedAmount).removeClass("animate-pulse");
+           $(".btn"+selectedAmount).attr("disabled", false);
+           $(".btn"+selectedAmount).html(oldText);
+        
+      await fetchUserStats();
+           
+    }
 
 
   const handleCopy = () => {
@@ -148,11 +321,10 @@ export default function TweetToEarnApp() {
 
   };
 
-  // usestate for wallet connect and connected
-  const { open } = useAppKit();
-  const { isConnected, address } = useAccount();
+ 
   const [tweetUrl, setTweetUrl] = useState("");
   const [user, setUsername] = useState("");
+  const [users_id, setUsersId] = useState(Number);
   const [points, setPoints] = useState(0);
   const [tgUsername, setTGUsername] = useState("");
 
@@ -173,6 +345,9 @@ export default function TweetToEarnApp() {
       if (!res.ok) throw new Error(data.error || "Failed to fetch user details");
       setPoints(data.points);
       setUsername(data.username);
+      setUsersId(data.users_id);
+      setAlphaCoins(data.alpha_coins);
+      setReferrals(data.referrals);
 
       if(data.is_quest_completed){
         setQuestComplete(true);
@@ -274,6 +449,8 @@ export default function TweetToEarnApp() {
         if(resData.message) {
         notifySuccess(resData.message) 
         }
+
+      await  fetchUserStats();
 
             switchTab();
     setQuestComplete(true);
@@ -465,11 +642,25 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
 
   fetchUserStats();
 
+    if(isConnected) {
+
+        if(allowanceUSDTData) {
+          setAllowanceUSDT(web3.utils.fromWei(allowanceUSDTData.toString(), 'ether'));
+          
+        }
+
+        if(balanceUSDTData) {
+
+          setTokenBalance(web3.utils.fromWei(balanceUSDTData.toString(), 'ether'));
+        }
+    }
+    
    if (!startTime) return;
 
     const interval = setInterval(() => {
       const diff = 3 * 24 * 60 * 60 * 1000 - (Date.now() - Number(startTime));
       if (diff <= 0) {
+        setTimeLeft("Expired");
         clearInterval(interval);
         return;
       }
@@ -487,7 +678,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
     
     //return () => clearInterval(interval);
 
-  });
+  },[allowanceUSDT, tokenBalance, isConnected, startTime, allowanceUSDTData, balanceUSDTData]);
 
 
    
@@ -495,10 +686,10 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
     
     <div className="min-h-screen bg-black text-white p-4 sm:p-6 bg-lightning" >
       <div className="flex justify-between items-center mb-6">
-        <div>👤 {user}</div>
+        <div>👤 {user || 'NA'}</div>
         <div className="flex items-center gap-2 text-white-600 text-lg font-bold">
           Coins:
-          <span className="text-yellow-500">{points.toLocaleString()}</span>
+          <span className="text-yellow-500">{points?.toLocaleString() || 0}</span>
           <Image src="/coin.png" width={40} height={40}  alt="coin"  />
         </div>
 
@@ -534,6 +725,11 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
               <p className="text-lg text-gray-300 mb-6">
                 Boost your coins by buying more coins
               </p>
+              </>
+
+            )}
+            {!showPaymentStep && (
+              <>
               <button
                 onClick={ handleBuyClick}
                 className="bg-blue-400 hover:bg-blue-600 text-white px-6 py-2 rounded-xl text-lg"
@@ -552,10 +748,9 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                     key={item.usd}
                     onClick={() => {
                       setSelectedAmount(item.usd);
-                      setSelectedCoinAmount(item.coins);
-                      setTimeout(handlePaymentSuccess, 2000); // Simulate payment
+                      handleBuyToken(item.usd, item.coins);
                     }}
-                    className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-left"
+                    className={ 'bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-left btn'+ item.usd }
                   >
                     ${item.usd} = {item.coins.toLocaleString()} coins
                   </button>
@@ -577,7 +772,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
           {selectedAmount && isInGodmode && (
             <div className="mt-4 text-yellow-500 text-lg">
               You purchased ${selectedAmount} worth of coins.<br />
-              Your total Alpha allocation now is {selectedCoinAmount?.toLocaleString()} coins.
+              Your total Alpha allocation now is {alpha_coins?.toLocaleString()} coins.
              <br/>
              <button
                 onClick={handleBuyMoreClick}
@@ -736,8 +931,11 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Connect Wallet
                         </Button>
                         }
+                        { timeLeft !== "Expired" ?
+                        <>
                         <ul className="list-disc list-inside">
                          <li className="text-sm">
+
                         🕓 Invite 7 friends in 3 days for +400K coins bonus <br />
                         <li className='text-sm mb-5'>Time Left</li>
                         <span className="text-sm text-gray-400">
@@ -773,7 +971,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                         Successful referrals: {referrals} / 7
                          </li>
                         </ul>
-                      
+                        
                         <div className="mt-4">
                           <p className="bg-gray-700 lex break-all mt-1 p-2 rounded text-sm">Your referral link:
                               {' '+ referralURL.substring(0,25)+'...'+referralURL.substring(38,42)+' '}
@@ -786,6 +984,12 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           </button>
                           {" "+copyMsg3}
                         </div>
+                        </>
+                        :<><ul className="list-disc list-inside">
+                             <li className="text-sm">Successful referrals: {referrals} / 7</li>
+                            </ul>
+                         </>
+                        }
                       </CardContent>
                     </div>
                   </div>

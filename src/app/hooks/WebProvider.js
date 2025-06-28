@@ -2,7 +2,7 @@
 import { wagmiAdapter, projectId } from '../config/index'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createAppKit } from '@reown/appkit/react'
-import { mainnet } from '@reown/appkit/networks'
+import { mainnet, bsc, base, polygon, bscTestnet } from '@reown/appkit/networks'
 import React from 'react'
 import { WagmiProvider } from 'wagmi'
 
@@ -19,7 +19,7 @@ const metadata = {
   icons: ["https://tweet-to-earn-app.vercel.app/logo.png"]
 }
 // 3. Set the networks
-const networks = [mainnet]
+const networks = [mainnet, bsc, base, polygon, bscTestnet]
 
 // 5. Create modal
 createAppKit({

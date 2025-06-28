@@ -21,7 +21,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (isConnected) {
       
-      if(ref === null){
+      if(!ref){
           router.push(`/dashboard`); // ✅ redirect when connected
 
       }else{
@@ -59,6 +59,7 @@ export default function LoginPage() {
                 <div className="relative w-full md:w-1/2 h-64 md:h-full">
                   <Image
                     src="/bg-login.png"
+                    sizes='fill'
                     alt="Login Side Image"
                     fill
                     className="object-cover"

@@ -81,7 +81,7 @@ export default function Leaderboard() {
                             {getRankIcon(i)}
                           </td>
                           <td className="px-4 sm:px-6 py-3 border-b border-gray-700 break-all">
-                            {user.username}
+                            {user.username || 'NA'}
                           </td>
                           <td className="px-4 sm:px-6 py-3 border-b border-gray-700">
                             {user.points.toLocaleString()}

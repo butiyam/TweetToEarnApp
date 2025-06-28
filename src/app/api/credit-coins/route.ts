@@ -4,6 +4,7 @@ import  { db }  from "../../lib/db";
 const X = process.env.X_FOLLOW_COINS;
 const TG = process.env.TG_FOLLOW_COINS;
 const SHARED = process.env.POST_SHARED_COINS;
+const Referral = process.env.REFERRAL_COINS;
 
 export async function POST(req: NextRequest) {
   
@@ -49,6 +50,19 @@ export async function POST(req: NextRequest) {
                     "UPDATE users SET  referrals_count = referrals_count + ? WHERE wallet_address = ?",
                     [1, user.referred_by]
                     );
+                    // check if reached 7 referrals target
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const  [reached]: any = await db.query("SELECT referrals_count FROM users WHERE wallet_address = ?", [user.referred_by]);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    if ((reached as any[]).length > 0) {
+                      const total_referrals = reached[0];
+                      if(total_referrals.referrals_count === 7){
+                        await db.query(
+                        "UPDATE users SET  points = points + ? WHERE wallet_address = ?",
+                        [Referral, user.referred_by]
+                        );
+                      }
+                    }
               }
           }
 

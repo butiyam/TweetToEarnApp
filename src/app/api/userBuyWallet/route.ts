@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
 
      const { searchParams } = new URL(req.url);
      const wallet_address = searchParams.get("wallet_address");
-     // eslint-disable-next-line @typescript-eslint/no-unused-vars
      const referral = searchParams.get("referral");
  
     if (!wallet_address) {
@@ -14,14 +13,13 @@ export async function GET(req: NextRequest) {
     }
 
     // Get user info
-    const [userRows] = await db.query(
-      "SELECT * FROM users WHERE wallet_address = ?",
+    const [userRows] = await db.query("SELECT  users.*, COALESCE(SUM(alpha_miners.coin_amount), 0) AS total_coins FROM users LEFT JOIN alpha_miners ON users.id = alpha_miners.users_id WHERE users.wallet_address = ?",
       [wallet_address]
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const user = (userRows as any[])[0];
-
-    if (!user) {
+    
+    if (!user.id) {
       if(referral === '0x0000000000000000000000000000000000000000'){
         
         await db.query(
@@ -56,19 +54,22 @@ export async function GET(req: NextRequest) {
 
        
       }
+    }else{
+        return NextResponse.json({ 
+          users_id: user.id!, 
+          username: user.username!,
+          points: user.points!,
+          x_joined: user.x_joined!,
+          has_shared: user.has_shared!,
+          telegram_joined: user.telegram_joined!,
+          is_quest_completed: user.is_quest_completed!,
+          quest_completed: user.quest_completed!,
+          referrals: user.referrals_count!,
+          alpha_coins: user.total_coins!,
+        });
+        
     }
 
-    return NextResponse.json({
-      
-      username: user.username!,
-      points: user.points!,
-      x_joined: user.x_joined!,
-      has_shared: user.has_shared!,
-      telegram_joined: user.telegram_joined!,
-      is_quest_completed: user.is_quest_completed!,
-      quest_completed: user.quest_completed!,
-
-    });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error("User API error:", err.message);
