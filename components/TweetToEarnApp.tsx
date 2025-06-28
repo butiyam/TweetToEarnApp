@@ -713,7 +713,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
               </>
 
             )}
-            {!showPaymentStep && (
+            {!showPaymentStep && !isInGodmode && (
               <>
               <button
                 onClick={ handleBuyClick}

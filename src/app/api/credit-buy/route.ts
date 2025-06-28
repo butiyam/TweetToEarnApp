@@ -26,6 +26,10 @@ export async function POST(req: NextRequest) {
                 await db.query(
                 "INSERT INTO alpha_miners (users_id, txn_hash, coin_amount) VALUES (?, ?, ?)",
                 [users_id, txn_hash, coin_amount, wallet_address]);
+
+                await db.query(
+                    "UPDATE users SET  points = points + ? WHERE wallet_address = ?",
+                    [coin_amount, wallet_address]);
             }
 
     return NextResponse.json({ message: 'Coins credited successfully' });
