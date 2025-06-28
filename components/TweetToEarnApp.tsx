@@ -27,6 +27,7 @@ export default function TweetToEarnApp() {
     
     const searchParams = useSearchParams();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {  data: hash, error, writeContractAsync } = useWriteContract()
 
     const  notifyErrorMsg = (msg : string) => toast.error(msg);
