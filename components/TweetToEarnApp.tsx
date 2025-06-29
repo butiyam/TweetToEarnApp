@@ -930,7 +930,7 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
                           Connect Wallet
                         </Button>
                         }
-                        { timeLeft !== "Expired" ?
+                        { (timeLeft !== "Expired" && referrals < 7 ) ?
                         <>
                         <ul className="list-disc list-inside">
                          <li className="text-sm">
