@@ -568,7 +568,8 @@ export default function TweetToEarnApp() {
       const resData = await tweetRes.json()
 
       if(resData.error) {
-       notifyErrorMsg(resData.error) 
+       notifyErrorMsg(resData.error);
+       return;
       }
 
       if(resData.message) {

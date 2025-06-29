@@ -27,8 +27,20 @@ export async function POST(req: NextRequest) {
     if ((existingUser as any[]).length > 0) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const user = (existingUser as any[])[0];
-              if (user.username !== username) {
+              if (user.username !== null && user.username !== username) {
                     return NextResponse.json({ error: "Tweet does't belongs to your account" }, { status: 409 });
+              }
+
+              if (user.username !== null) {
+              await db.query(
+                "UPDATE users SET points = points + ? WHERE wallet_address = ?",
+                [COINS, wallet_address]
+                );
+              }else{
+                  await db.query(
+                  "UPDATE users SET username = ?, points = points + ? WHERE wallet_address = ?",
+                  [username, COINS, wallet_address]
+                  );
               }
     }
 
@@ -38,21 +50,6 @@ export async function POST(req: NextRequest) {
     );
 
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((existingUser as any[]).length > 0) {
-              await db.query(
-                "UPDATE users SET points = points + ? WHERE wallet_address = ?",
-                [COINS, wallet_address]
-                );
-
-    //  return NextResponse.json({ error: "Username already exist" }, { status: 409 });
-    }else{
-
-          await db.query(
-                  "UPDATE users SET username = ?, points = points + ? WHERE wallet_address = ?",
-                  [username, COINS, wallet_address]
-                  );
-    }
     return NextResponse.json({ message: "Tweet validated successfully" });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
