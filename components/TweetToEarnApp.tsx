@@ -49,7 +49,7 @@ export default function TweetToEarnApp() {
   const [isInGodmode, setIsInGodmode] = useState(false);
   const [showPaymentStep, setShowPaymentStep] = useState(false);
 
-    // usestate for wallet connect and connected
+  // usestate for wallet connect and connected
   const { open } = useAppKit();
   const chainId = useChainId();
   const { isConnected, address } = useAccount();
