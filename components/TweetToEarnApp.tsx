@@ -54,12 +54,11 @@ export default function TweetToEarnApp() {
   const chainId = useChainId();
   const { isConnected, address } = useAccount();
 
-  const clientWallet : `0x${string}` = '0x342C1af49603F09B90201E6A22af7B6d3cEE3a77';
+  const clientWallet : `0x${string}` = '0x0ab3863619D5a9787AA73a1d6F686C6822838545';
   const usdt_address: Record<number, `0x${string}`> = {
   1:  '0xdAC17F958D2ee523a2206206994597C13D831ec7',
   56: '0x55d398326f99059fF775485246999027B3197955',
-  137:'0xFb2a313Ad7a11Af0AA85fF54186a87202D07c6b3',
-  97: '0x43d79657de71A94F46891Ad5Ac6B3650404672eF'
+  137:'0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
 };
 
   const [tokenBalance, setTokenBalance] = useState('');
@@ -159,7 +158,7 @@ export default function TweetToEarnApp() {
               abi: tokenABI.abi,
               address: usdt_address[chainId],
               functionName: 'approve',
-              args:[clientWallet, web3.utils.toWei((selectedAmount.toString()), 'ether')],
+              args:[clientWallet, chainId === 56 ? web3.utils.toWei((selectedAmount.toString()), 'ether') : Number(web3.utils.toWei((selectedAmount.toString()), 'ether') )/ (10 ** (18-6))],
             })
       
             const txn = await publicClient.waitForTransactionReceipt( { hash } );
@@ -173,7 +172,7 @@ export default function TweetToEarnApp() {
                   abi: tokenABI.abi,
                   address: usdt_address[chainId],
                   functionName: 'transfer',
-                  args:[clientWallet , web3.utils.toWei((selectedAmount.toString()), 'ether')],
+                  args:[clientWallet , chainId === 56 ? web3.utils.toWei((selectedAmount.toString()), 'ether') : Number(web3.utils.toWei((selectedAmount.toString()), 'ether') )/ (10 ** (18-6))],
                 })
       
                 const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
@@ -216,7 +215,7 @@ export default function TweetToEarnApp() {
                         abi: tokenABI.abi,
                         address: usdt_address[chainId],
                         functionName: 'transfer',
-                        args:[clientWallet , selectedAmount],
+                        args:[clientWallet , chainId === 56 ? web3.utils.toWei((selectedAmount.toString()), 'ether') : Number(web3.utils.toWei((selectedAmount.toString()), 'ether') )/ (10 ** (18-6))],
                       })
             
                       const txn2 = await publicClient.waitForTransactionReceipt( { hash } );
