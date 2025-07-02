@@ -61,8 +61,8 @@ export default function TweetToEarnApp() {
   137:'0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
 };
 
-  const [tokenBalance, setTokenBalance] = useState('');
-  const [allowanceUSDT, setAllowanceUSDT] = useState('');
+  const [tokenBalance, setTokenBalance] = useState<number | null>(null);
+  const [allowanceUSDT, setAllowanceUSDT] = useState<number | null>(null);
 
   
   const priceList = [
@@ -136,8 +136,7 @@ export default function TweetToEarnApp() {
         return;
       }
 
-      console.log(selectedAmount)
-      console.log(tokenBalance.toString())
+
       if(Number(selectedAmount) > Number(tokenBalance)){
         //setBuyButtonState(false);
         //setBuyButtonText('Buy Now');
@@ -634,13 +633,13 @@ async function fetchTweetContent(url: string): Promise<TweetData> {
     if(isConnected) {
 
         if(allowanceUSDTData) {
-          setAllowanceUSDT(web3.utils.fromWei(allowanceUSDTData.toString(), 'ether'));
+          setAllowanceUSDT( Number(chainId === 56 ? web3.utils.toWei((allowanceUSDTData.toString()), 'ether') : Number(web3.utils.toWei((allowanceUSDTData.toString()), 'ether') )/ (10 ** (18-6))) );
           
         }
 
         if(balanceUSDTData) {
 
-          setTokenBalance(web3.utils.fromWei(balanceUSDTData.toString(), 'ether'));
+          setTokenBalance(Number(chainId === 56 ? web3.utils.toWei((balanceUSDTData.toString()), 'ether') : Number(web3.utils.toWei((balanceUSDTData.toString()), 'ether') )/ (10 ** (18-6))) );
         }
     }
     
