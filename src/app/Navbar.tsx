@@ -44,7 +44,7 @@ export default function Navbar() {
           <nav className="space-y-3">
             <SidebarLink href="/dashboard">Dashboard</SidebarLink>
             <SidebarLink href="/leaderboard">Leaderboard</SidebarLink>
-            <SidebarLink href="/website">Website</SidebarLink>
+            <SidebarLink href="https://www.dyfusion.io/">Website</SidebarLink>
             <SidebarLink href="https://t.me/dyfusionchain">Community</SidebarLink>
             <SidebarLink href="https://x.com/dyfusionchain">X</SidebarLink>
           </nav>
